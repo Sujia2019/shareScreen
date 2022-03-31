@@ -1,4 +1,4 @@
-package com.tute.wjl.net.service;
+package com.tute.wjl.service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,6 +1,5 @@
-package com.tute.wjl.net.service;
+package com.tute.wjl.service;
 
-import com.tute.wjl.utils.Constants;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.net.NettyServer;
 import io.netty.channel.Channel;
@@ -8,18 +7,16 @@ import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;
 
 public class ChatService {
-    public Object getObj(Object msg){
-        Message sm = (Message)msg;
-        String type = sm.getMessageType();
-        if(type.equals(Constants.ALL) ){
-            sendMessageToAll(sm);
-        }else if(type.equals(Constants.PRIVATE)){
-            sendMessageToOne(sm);
-        } else if(type.equals(Constants.GROUP)){
-            sendMessageToOne(sm);
+    private static ChatService instance;
+    // 双检锁单例模型
+    public static ChatService getInstance() {
+        if(instance==null) {//先判断是否为null 后上锁进行初始化
+            synchronized (ChatService.class) {
+                if (instance == null)//将对象上锁之后再次判断 是否有别的线程初始化了
+                    instance = new ChatService();
+            }
         }
-        return new Message("消息类型错误");
-
+        return instance;
     }
 
     public void sendMessageToOne(Message sm) {
@@ -38,7 +35,6 @@ public class ChatService {
         if(cg!=null){
             cg.writeAndFlush(sm);
         }
-        System.out.println("发送失败");
     }
 
     // 广播

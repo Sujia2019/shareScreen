@@ -12,8 +12,8 @@ public class Message implements Serializable {
     private String messageType;
     private String fromId;               // userAccount
     private String fromName;             // userName
-    private String toId;                 // userAccount或者groupId对应的班级
-    private String content;              // 消息内容
+    private String toId;                 // userAccount或者groupId对应的班级 或者目的
+    private Object content;              // 消息内容
     private byte[] fileContent;          // 文件内容
 
     public Message(){
@@ -21,6 +21,7 @@ public class Message implements Serializable {
     }
 
     public Message (String errorMsg){
+        this.fromId = Constants.SERVER;
         this.messageType = Constants.ERROR;
         this.content = errorMsg;
     }

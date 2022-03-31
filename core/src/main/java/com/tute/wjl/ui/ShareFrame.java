@@ -4,20 +4,28 @@
 
 package com.tute.wjl.ui;
 
-import com.tute.wjl.net.NettyClient;
+import com.tute.wjl.ClientApplication;
+import com.tute.wjl.context.DataContext;
+import com.tute.wjl.entity.Message;
+import com.tute.wjl.entity.User;
+import com.tute.wjl.service.PictureService;
+import com.tute.wjl.utils.Constants;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import javax.swing.*;
 
 /**
  * @author unknown
  */
 @Data
-public class Client extends JFrame {
-    public Client() throws IOException {
+public class ShareFrame extends JFrame {
+    private DataContext dataContext;
+
+    public ShareFrame(DataContext dataContext) {
+        this.dataContext = dataContext;
         initComponents();
     }
 
@@ -26,10 +34,39 @@ public class Client extends JFrame {
     }
 
     private void startShareScreen(MouseEvent e) {
+        if(dataContext.getUser().isTeacher()){
+            new Thread(new ShareScreen()).start();
+        }
         // TODO add your code here
     }
 
-    private void initComponents() throws IOException {
+    class ShareScreen implements Runnable{
+        @SneakyThrows
+        @Override
+        public void run() {
+            while (true){
+                Message message = initMessage();
+                User user = dataContext.getUser();
+                // TODO 目前是用老师自己的班级和学生班级对应
+                message.setToId(user.getUserClass());
+                PictureService.getInstance().sendPicByte(message);
+                ClientApplication.send(message);
+                // 30帧  33
+                // 60帧  17
+                // 10帧  10
+                Thread.sleep(100);
+            }
+        }
+        private Message initMessage(){
+            Message message = new Message();
+            User user = dataContext.getUser();
+            message.setFromId(user.getUserAccount());
+            message.setMessageType(Constants.PICTURE);
+            return message;
+        }
+    }
+
+    private void initComponents(){
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - sujia
         system = new JFrame();
@@ -56,14 +93,15 @@ public class Client extends JFrame {
 
             //======== chatLog ========
             {
-                chatLog.setBackground(Color.darkGray);
+                chatLog.setBackground(Color.white);
                 chatLog.setForeground(new Color(102, 102, 102));
-                chatLog.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.
-                EmptyBorder(0,0,0,0), "JF\u006frmDes\u0069gner \u0045valua\u0074ion",javax.swing.border.TitledBorder.CENTER,javax.swing
-                .border.TitledBorder.BOTTOM,new java.awt.Font("D\u0069alog",java.awt.Font.BOLD,12),
-                java.awt.Color.red),chatLog. getBorder()));chatLog. addPropertyChangeListener(new java.beans.PropertyChangeListener()
-                {@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062order".equals(e.getPropertyName()))
-                throw new RuntimeException();}});
+                chatLog.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax
+                . swing. border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing
+                . border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .
+                Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red
+                ) ,chatLog. getBorder( )) ); chatLog. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override
+                public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName (
+                ) )) throw new RuntimeException( ); }} );
 
                 //======== userNames ========
                 {
@@ -115,7 +153,7 @@ public class Client extends JFrame {
 
             //======== input ========
             {
-                input.setBackground(Color.darkGray);
+                input.setBackground(Color.white);
                 input.setToolTipText("\u8f93\u5165");
 
                 //======== scrollPane1 ========
@@ -148,7 +186,7 @@ public class Client extends JFrame {
 
             //======== controller ========
             {
-                controller.setBackground(Color.darkGray);
+                controller.setBackground(Color.white);
 
                 //---- button2 ----
                 button2.setText("\u5171\u4eab\u5c4f\u5e55");
@@ -184,10 +222,10 @@ public class Client extends JFrame {
                 );
                 controllerLayout.setVerticalGroup(
                     controllerLayout.createParallelGroup()
-                        .addComponent(button2, GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                        .addComponent(button3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(button3, GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                         .addComponent(button5, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(button6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(button2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                 );
             }
 
@@ -200,8 +238,8 @@ public class Client extends JFrame {
             systemContentPaneLayout.setHorizontalGroup(
                 systemContentPaneLayout.createParallelGroup()
                     .addGroup(systemContentPaneLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(screen, GroupLayout.PREFERRED_SIZE, 983, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(screen, GroupLayout.PREFERRED_SIZE, 1003, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(systemContentPaneLayout.createParallelGroup()
                             .addComponent(chatLog, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -211,9 +249,9 @@ public class Client extends JFrame {
             );
             systemContentPaneLayout.setVerticalGroup(
                 systemContentPaneLayout.createParallelGroup()
-                    .addGroup(GroupLayout.Alignment.TRAILING, systemContentPaneLayout.createSequentialGroup()
+                    .addGroup(systemContentPaneLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(systemContentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addGroup(systemContentPaneLayout.createParallelGroup()
                             .addComponent(screen, GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
                             .addGroup(systemContentPaneLayout.createSequentialGroup()
                                 .addComponent(chatLog, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -248,11 +286,5 @@ public class Client extends JFrame {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public static void main(String[] args) throws Exception {
-        // 打开图形化界面
-        Client client = new Client();
-        // 创建网络连接
-        NettyClient nettyClient = new NettyClient(client);
-        nettyClient.init("localhost",8888);
-
     }
 }

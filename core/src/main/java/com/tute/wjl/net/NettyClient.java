@@ -1,9 +1,10 @@
 package com.tute.wjl.net;
 
+import com.tute.wjl.context.DataContext;
+import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.codec.NettyDecoder;
 import com.tute.wjl.codec.NettyEncoder;
-import com.tute.wjl.ui.Client;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -20,13 +21,17 @@ public class NettyClient {
 
     private EventLoopGroup group;
     private Channel channel;
-    private Client client;
+    private FrameContext context;
+    private DataContext dataContext;
 
-    public NettyClient(Client client){
-        this.client = client;
+
+
+    public NettyClient(FrameContext context,DataContext dataContext){
+        this.context = context;
+        this.dataContext = dataContext;
     }
 
-    public void init(String serverHost,int port) throws InterruptedException {
+    public boolean init(String serverHost,int port){
         this.group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -37,18 +42,24 @@ public class NettyClient {
                         ch.pipeline()
                                 .addLast(new NettyEncoder())
                                 .addLast(new NettyDecoder())
-                                .addLast(new NettyClientHandler(client.getScreen()));
+                                .addLast(new NettyClientHandler(context,dataContext));
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-
-        channel = bootstrap.connect(serverHost, port).sync().channel();
-        if (!isValidate()) {
-            close();
-            return;
+        try {
+            channel = bootstrap.connect(serverHost, port).sync().channel();
+            if (!isValidate()) {
+                close();
+                return false;
+            }
+            LOGGER.debug(">>>>>>>>>>>>>>>>netty client proxy, connect to server success at host:{}, port:{}", serverHost, port);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
-        LOGGER.debug(">>>>>>>>>>>>>>>>rpc netty client proxy, connect to server success at host:{}, port:{}", serverHost, port);
+
     }
 
     private void close() {
@@ -58,7 +69,7 @@ public class NettyClient {
         if (this.group != null && !this.group.isShutdown()) {
             this.group.shutdownGracefully();
         }
-        LOGGER.debug("rpc netty client close");
+        LOGGER.debug("netty client close");
     }
 
     private boolean isValidate() {
@@ -69,7 +80,6 @@ public class NettyClient {
     }
 
     public void send(Message message) throws Exception {
-        System.out.println("发送");
         this.channel.writeAndFlush(message).sync();
     }
 }

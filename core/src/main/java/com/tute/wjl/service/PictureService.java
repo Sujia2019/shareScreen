@@ -1,4 +1,4 @@
-package com.tute.wjl.net.service;
+package com.tute.wjl.service;
 
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.utils.GzipUtils;

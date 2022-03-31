@@ -13,6 +13,7 @@
         <module>teacher</module>
         <module>core</module>
         <module>server</module>
+        <module>api</module>
     </modules>
 
     <properties>

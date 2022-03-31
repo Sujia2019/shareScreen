@@ -21,7 +21,6 @@ public class NettyServer {
     private EventLoopGroup bossGroup = new NioEventLoopGroup();
     // 用于处理IO
     private EventLoopGroup workGroup = new NioEventLoopGroup();
-
     // 所有人组
     public static ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
@@ -37,7 +36,9 @@ public class NettyServer {
                 protected void initChannel(SocketChannel channel) {
                     ChannelPipeline pipeline = channel.pipeline();
                     group.add(channel);
-                    channel.closeFuture().addListener((ChannelFutureListener) future -> group.remove(future.channel()));
+                    channel.closeFuture().addListener((ChannelFutureListener) future -> {
+                        group.remove(future.channel());
+                    });
                     pipeline.addLast(new NettyDecoder());
                     pipeline.addLast(new NettyEncoder());
                     pipeline.addLast(new NettyServerHandler());

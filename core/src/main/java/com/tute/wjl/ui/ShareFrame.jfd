@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :p:26:p, comp screen:::p:983:p, space :::p, par l {comp chatLog:::::x, comp controller::l::163:x, comp input::l:::x}, space :::p}}"
-			"$verticalGroup": "par l {seq t {space :::p, par t {comp screen::::704:x, seq {comp chatLog:::p::p, space :::p, comp input:::p::p, space :::p, comp controller:::::x}}, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp screen:::p:1003:p, space :::p, par l {comp chatLog:::::x, comp controller::l::163:x, comp input::l:::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp screen::::704:x, seq {comp chatLog:::p::p, space :::p, comp input:::p::p, space :::p, comp controller:::::x}}, space :::p}}"
 		} ) {
 			name: "system"
 			"title": "在线教学系统"
@@ -16,7 +16,7 @@ new FormModel {
 				"$verticalGroup": "par l {comp userNames:::::x, comp panel4::l:::x}"
 			} ) {
 				name: "chatLog"
-				"background": sfield java.awt.Color darkGray
+				"background": sfield java.awt.Color white
 				"foreground": new java.awt.Color( 102, 102, 102, 255 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 					"$horizontalGroup": "par l {space :0:120:x}"
@@ -38,7 +38,7 @@ new FormModel {
 				"$verticalGroup": "par l {comp sendButton::l::100:x, comp scrollPane1::t::100:x}"
 			} ) {
 				name: "input"
-				"background": sfield java.awt.Color darkGray
+				"background": sfield java.awt.Color white
 				"toolTipText": "输入"
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "scrollPane1"
@@ -55,10 +55,10 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 				"$horizontalGroup": "par l {seq l {comp button2:::::x, space :::p, comp button3:::p::p, space :::p, comp button6:::::x, space :::p, comp button5:::::x, space :::p}}"
-				"$verticalGroup": "par l {comp button2::::52:x, comp button3::l:::x, comp button5::l:::x, comp button6::l:::x}"
+				"$verticalGroup": "par l {comp button3::l::52:x, comp button5::l:::x, comp button6::l:::x, comp button2::t::52:x}"
 			} ) {
 				name: "controller"
-				"background": sfield java.awt.Color darkGray
+				"background": sfield java.awt.Color white
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "button2"
 					"text": "共享屏幕"

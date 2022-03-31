@@ -43,7 +43,6 @@ public class NettyDecoder extends ByteToMessageDecoder {
             // 读取处消息长度
             int contentLength = in.readInt();
             if(in.readableBytes() < contentLength){
-                System.out.println("消息的内容长度没有达到预期设定的长度，还原指针重新读");
                 //消息的内容长度没有达到预期设定的长度，还原指针重新读
                 in.readerIndex(begin);
                 return;
@@ -53,8 +52,8 @@ public class NettyDecoder extends ByteToMessageDecoder {
             in.readBytes(data);
             Object obj=serializer.deSerializer(data, Message.class);
             out.add(obj);
+        }else{
+            System.out.println("不符合协议内容");
         }
-        System.out.println("不符合协议内容");
-
     }
 }
