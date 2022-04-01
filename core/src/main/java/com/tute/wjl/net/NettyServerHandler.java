@@ -5,7 +5,6 @@ import com.tute.wjl.entity.User;
 import com.tute.wjl.service.ChatService;
 import com.tute.wjl.service.GroupService;
 import com.tute.wjl.service.UserService;
-import com.tute.wjl.utils.ChannelUtil;
 import com.tute.wjl.utils.Constants;
 import com.tute.wjl.utils.ThreadPoolUtil;
 import io.netty.channel.ChannelHandler;
@@ -47,13 +46,15 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                 case Constants.PRIVATE:
                 // 发送共享屏幕请求
                 case Constants.SHARE:
+                // 对方接受共享屏幕，此时告诉老师可以停止屏幕共享
+                case Constants.SHARE_RECEIVE:
                     chatService.sendMessageToOne(message);
                     break;
                 // 创建一个局部分组(开始上课)
                 case Constants.CREATE:
                 // 开始上课
                 case Constants.START:
-                    groupService.createGroup(message);
+                    groupService.createGroup(message,ctx);
                     break;
                 // 加入课程
                 case Constants.ADD:
@@ -101,13 +102,11 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ChannelUtil.getChannels().setChannel(ctx.channel());
         LOGGER.info(">>>>>>>channel active"+ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx){
-        ChannelUtil.getChannels().remove();
         LOGGER.info(">>>>>>>channel is not active"+ctx);
     }
 
@@ -116,14 +115,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
         if(message.getContent() instanceof User){
             User user = (User) obj;
             if(message.getToId().equals(Constants.LOGIN)){
-                System.out.println(user.toString());
                 user = userService.doLogin(user);
                 if(user!=null){
                     // 登陆成功，将自己注册到map当中
-                    GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
-                    Message res = new Message();
-                    res.setContent(user);
-                    res.setMessageType(Constants.USER);
+                    Message res = loginSuccess(ctx, user);
                     res.setToId(Constants.LOGIN_SUCCESS);
                     res.setFromId("SERVER");
                     ctx.writeAndFlush(res);
@@ -131,9 +126,29 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                     Message res = new Message("登陆失败,用户名或密码错误");
                     ctx.writeAndFlush(res);
                 }
+            }else if(message.getToId().equals(Constants.REGISTER)){
+                user = userService.doRegister(user);
+                if(user!=null){
+                    // 注册成功，将自己注册到map当中
+                    Message res = loginSuccess(ctx, user);
+                    res.setToId(Constants.REGISTER_SUCCESS);
+                    res.setFromId("SERVER");
+                    ctx.writeAndFlush(res);
+                }else{
+                    Message res = new Message("注册失败，账号已存在");
+                    ctx.writeAndFlush(res);
+                }
             }
 //            GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
         }
+    }
+
+    private Message loginSuccess(ChannelHandlerContext ctx, User user) {
+        GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
+        Message res = new Message();
+        res.setContent(user);
+        res.setMessageType(Constants.USER);
+        return res;
     }
 
 }

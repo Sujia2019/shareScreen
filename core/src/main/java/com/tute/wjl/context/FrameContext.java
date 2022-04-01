@@ -1,7 +1,5 @@
 package com.tute.wjl.context;
 
-
-import com.tute.wjl.entity.User;
 import com.tute.wjl.ui.ErrorTips;
 import lombok.Data;
 
@@ -14,4 +12,11 @@ public class FrameContext {
     private ErrorTips error;
     private JFrame shareFrame;
     private JFrame loginFrame;
+    private JList userList;
+    private JFrame teacherFrame;
+    private JFrame studentFrame;
+    private JButton shareButton;
+    private JButton requestButton;
+    private JButton endButton;
+    private JButton closeButton;
 }

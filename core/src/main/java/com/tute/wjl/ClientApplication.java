@@ -4,9 +4,7 @@ import com.tute.wjl.context.DataContext;
 import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.net.NettyClient;
-import com.tute.wjl.ui.ErrorTips;
-import com.tute.wjl.ui.ShareFrame;
-import com.tute.wjl.ui.LoginFrame;
+import com.tute.wjl.ui.*;
 
 // client 启动项
 public class ClientApplication {
@@ -31,9 +29,24 @@ public class ClientApplication {
         LoginFrame loginFrame = new LoginFrame(dataContext);
         loginFrame.setVisible(true);
 
+        TeacherMainFrame teacherFrame = new TeacherMainFrame(dataContext);
+        teacherFrame.setVisible(false);
+
+        StudentMainFrame studentFrame = new StudentMainFrame(dataContext);
+        studentFrame.setVisible(false);
+
         context.setLoginFrame(loginFrame);
         context.setShareFrame(shareFrame.getSystem());
         context.setLabel(shareFrame.getScreen());
+        context.setUserList(shareFrame.getUserList());
+        context.setStudentFrame(studentFrame);
+        context.setTeacherFrame(teacherFrame);
+        context.setEndButton(shareFrame.getEndButton());
+        context.setRequestButton(shareFrame.getRequestButton());
+        context.setShareButton(shareFrame.getShareButton());
+        context.setCloseButton(shareFrame.getCloseButton());
+
+
 
     }
 
@@ -48,8 +61,12 @@ public class ClientApplication {
 
     }
 
-    public static void send(Message message) throws Exception {
-        nettyClient.send(message);
+    public static void send(Message message) {
+        try {
+            nettyClient.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

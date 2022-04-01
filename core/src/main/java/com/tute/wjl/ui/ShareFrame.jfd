@@ -4,38 +4,55 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp screen:::p:1003:p, space :::p, par l {comp chatLog:::::x, comp controller::l::163:x, comp input::l:::x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp screen::::704:x, seq {comp chatLog:::p::p, space :::p, comp input:::p::p, space :::p, comp controller:::::x}}, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp screen:::p:980:p, space :::p, par l {comp chatPanel:::::x, comp controller::l::163:x, comp input::l:::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp screen::::704:x, seq {comp chatPanel:::::x, space :::p, comp input:::p::p, space :::p, comp controller:::::x}}, space :::p}}"
 		} ) {
 			name: "system"
 			"title": "在线教学系统"
 			"background": new java.awt.Color( 255, 255, 255, 255 )
 			"visible": true
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {comp userNames:::p::p, space :::p, comp panel4:::::x}}"
-				"$verticalGroup": "par l {comp userNames:::::x, comp panel4::l:::x}"
+				"$horizontalGroup": "par l {seq l {comp userNames:::::x, space :::p, comp chatLogs:::::p}}"
+				"$verticalGroup": "par l {comp chatLogs::l:::x, comp userNames::l:::x}"
 			} ) {
-				name: "chatLog"
+				name: "chatPanel"
 				"background": sfield java.awt.Color white
 				"foreground": new java.awt.Color( 102, 102, 102, 255 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:120:x}"
-					"$verticalGroup": "par l {space :0:540:x}"
+					"$horizontalGroup": "par l {seq l {space :::p, comp scrollPane3::::82:x, space :::p}}"
+					"$verticalGroup": "par l {seq l {space :::p, comp scrollPane3:::::x, space :::p}}"
 				} ) {
 					name: "userNames"
 					"background": new java.awt.Color( 255, 204, 255, 255 )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane3"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "chatLog"
+						} )
+					} )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:0:x}"
-					"$verticalGroup": "par l {space :0:540:x}"
+					"$horizontalGroup": "par l {comp scrollPane4::l::63:x}"
+					"$verticalGroup": "par l {seq l {space :::p, comp scrollPane4::::528:x, space :::p}}"
+					"honorsVisibility": false
 				} ) {
-					name: "panel4"
+					name: "chatLogs"
 					"background": new java.awt.Color( 204, 255, 255, 255 )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane4"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "userList"
+							"selectionMode": 0
+							"model": new javax.swing.DefaultListModel {
+								addElement( "student(student)" )
+							}
+						} )
+					} )
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {comp scrollPane1:::::x, space :::p, comp sendButton:::p:58:p}}"
-				"$verticalGroup": "par l {comp sendButton::l::100:x, comp scrollPane1::t::100:x}"
+				"$horizontalGroup": "par l {seq l {comp scrollPane1:::::x, space :::p, par l {comp sendToOne:::p:54:p, comp sendToAll:::p:54:p}, space :::p}}"
+				"$verticalGroup": "par l {seq {comp sendToAll:::p:47:p, space :::p, comp sendToOne::::47:x}, comp scrollPane1::l::100:x}"
 			} ) {
 				name: "input"
 				"background": sfield java.awt.Color white
@@ -49,38 +66,47 @@ new FormModel {
 					} )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "sendButton"
-					"text": "发送"
+					name: "sendToAll"
+					"text": "所有人"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sendToAllMouseClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "sendToOne"
+					"text": "私聊"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sendToOneMouseClicked", true ) )
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {comp button2:::::x, space :::p, comp button3:::p::p, space :::p, comp button6:::::x, space :::p, comp button5:::::x, space :::p}}"
-				"$verticalGroup": "par l {comp button3::l::52:x, comp button5::l:::x, comp button6::l:::x, comp button2::t::52:x}"
+				"$horizontalGroup": "par l {seq l {comp shareButton:::::x, space :::p, comp closeButton:::p::p, space :::p, comp requestButton:::::x, space :::p, comp endButton:::::x, space :::p}}"
+				"$verticalGroup": "par l {comp closeButton::l::52:x, comp endButton::l:::x, comp requestButton::l:::x, comp shareButton::t::52:x}"
 			} ) {
 				name: "controller"
 				"background": sfield java.awt.Color white
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button2"
+					name: "shareButton"
 					"text": "共享屏幕"
 					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "startShareScreen", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button3"
+					name: "closeButton"
 					"text": "结束共享"
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button5"
-					"text": "退出"
+					name: "endButton"
+					"text": "结束课程"
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button6"
-					"text": "申请共享"
+					name: "requestButton"
+					"text": "请求共享"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "requestButtonMouseClicked", true ) )
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "screen"
-				"text": "你好"
+				"text": "                暂未共享屏幕"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"background": sfield java.awt.Color white
+				"font": new java.awt.Font( "Lucida Grande", 0, 30 )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 5 )

@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {par l {seq l {space :p:55:p, par l {seq {comp label1:::p:35:p, space s:::p, comp accountField:::p:193:p}, seq l {comp label2:::p:35:p, space s:::p, par l {comp pwdField::l:p:193:p, seq l {par l {comp loginButton::l:p:58:p, comp radioStudent::l:p::p}, space :p:77:p, par l {comp radioTeacher:::p::p, comp button2:::p:58:p}}}}}}, seq l {space :p:30:p, comp label3:::p::p, space s:::p, comp textField3:::p:193:p}}, space ::132:x}}"
-			"$verticalGroup": "par l {seq l {space :p:77:p, par t {comp label1:::p:26:p, comp accountField:::p::p}, space s:::p, par b {comp label2::b:p:26:p, comp pwdField::b:p::p}, space s:::p, par b {comp textField3::b:p::p, comp label3::b:p:26:p}, space ::18:x, par b {comp radioStudent::b:p::p, comp radioTeacher::b:p::p}, space s:::p, par b {comp button2::b:p:37:p, comp loginButton::b:p:37:p}, space :p:27:p}}"
+			"$horizontalGroup": "par l {seq l {par l {seq l {space :p:55:p, par l {seq {comp label1:::p:35:p, space s:::p, comp accountField:::p:193:p}, seq l {comp label2:::p:35:p, space s:::p, par l {comp pwdField::l:p:193:p, seq l {par l {comp loginButton::l:p:58:p, comp radioStudent::l:p::p}, space :p:77:p, par l {comp radioTeacher:::p::p, comp button2:::p:58:p}}}}}}, seq l {space :p:30:p, comp label3:::p::p, space s:::p, comp pwdField2:::p:193:p}}, space ::132:x}}"
+			"$verticalGroup": "par l {seq l {space :p:77:p, par t {comp label1:::p:26:p, comp accountField:::p::p}, space s:::p, par b {comp label2::b:p:26:p, comp pwdField::b:p::p}, space s:::p, par b {comp pwdField2::b:p::p, comp label3::b:p:26:p}, space ::18:x, par b {comp radioStudent::b:p::p, comp radioTeacher::b:p::p}, space s:::p, par b {comp button2::b:p:37:p, comp loginButton::b:p:37:p}, space :p:27:p}}"
 		} ) {
 			name: "this"
 			"background": new java.awt.Color( 204, 255, 255, 255 )
@@ -42,7 +42,7 @@ new FormModel {
 				"font": #Font0
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textField3"
+				name: "pwdField2"
 			} )
 			add( new FormComponent( "javax.swing.JRadioButton" ) {
 				name: "radioStudent"

@@ -9,6 +9,7 @@ import com.tute.wjl.context.DataContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
 import com.tute.wjl.utils.Constants;
+import io.netty.util.internal.StringUtil;
 import lombok.Data;
 
 import java.awt.*;
@@ -32,27 +33,46 @@ public class LoginFrame extends JFrame {
     }
 
     private void doLogin(MouseEvent e) {
-        User user = new User();
-        user.setUserAccount(this.accountField.getText());
-        user.setUserPwd(this.pwdField.getText());
-        Message message = new Message();
-        message.setFromId(user.getUserAccount());
-        message.setMessageType(Constants.USER);
-        message.setToId(Constants.LOGIN);
-        if(this.radioTeacher.isSelected()){
-            user.setTeacher(true);
+        String account = this.accountField.getText();
+        String pwd = this.pwdField.getText();
+        if(StringUtil.isNullOrEmpty(account)||StringUtil.isNullOrEmpty(pwd)){
+            ErrorTips error = new ErrorTips();
+            error.getErrorMsg().setText("用户名或密码不能为空");
+        }else{
+            createUser(account, pwd, Constants.LOGIN);
         }
-        message.setContent(user);
-        try {
-            ClientApplication.send(message);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        // TODO add your code here
     }
 
     private void doRegister(MouseEvent e) {
         // TODO add your code here
+        String account = this.accountField.getText();
+        String pwd = this.pwdField.getText();
+        String pwd2 = this.pwdField2.getText();
+        if(StringUtil.isNullOrEmpty(account)||StringUtil.isNullOrEmpty(pwd)){
+            ErrorTips error = new ErrorTips();
+            error.getErrorMsg().setText("用户名或密码不能为空");
+        }else if(!pwd.equals(pwd2)){
+            ErrorTips error = new ErrorTips();
+            error.getErrorMsg().setText("两次密码输入不一致");
+        }else{
+            createUser(account, pwd, Constants.REGISTER);
+        }
+
+    }
+
+    private void createUser(String account, String pwd, String register) {
+        User user = new User();
+        user.setUserAccount(account);
+        user.setUserPwd(pwd);
+        Message message = new Message();
+        message.setFromId(user.getUserAccount());
+        message.setMessageType(Constants.USER);
+        message.setToId(register);
+        if(this.radioTeacher.isSelected()){
+            user.setTeacher(true);
+        }
+        message.setContent(user);
+        ClientApplication.send(message);
     }
 
     private void initComponents() {
@@ -65,7 +85,7 @@ public class LoginFrame extends JFrame {
         loginButton = new JButton();
         button2 = new JButton();
         label3 = new JLabel();
-        textField3 = new JTextField();
+        pwdField2 = new JTextField();
         radioStudent = new JRadioButton();
         radioTeacher = new JRadioButton();
 
@@ -141,7 +161,7 @@ public class LoginFrame extends JFrame {
                             .addGap(30, 30, 30)
                             .addComponent(label3)
                             .addGap(18, 18, 18)
-                            .addComponent(textField3, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(pwdField2, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap(132, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
@@ -157,7 +177,7 @@ public class LoginFrame extends JFrame {
                         .addComponent(pwdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(textField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pwdField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label3, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -188,7 +208,7 @@ public class LoginFrame extends JFrame {
     private JButton loginButton;
     private JButton button2;
     private JLabel label3;
-    private JTextField textField3;
+    private JTextField pwdField2;
     private JRadioButton radioStudent;
     private JRadioButton radioTeacher;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

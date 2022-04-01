@@ -44,6 +44,16 @@ public class UserService {
         return null;
     }
 
+    public User doRegister(User user){
+        String userAccount = user.getUserAccount();
+        if(users.containsKey(userAccount)){
+            return null;
+        }
+        createUser(user);
+        users.put(userAccount,user);
+        return user;
+    }
+
 
     public User updateUser(User user){
         String userAccount = user.getUserAccount();
@@ -57,12 +67,22 @@ public class UserService {
     private static User createUser(String userAccount,String trueName,String userClass,boolean isTeacher){
         User user = new User();
         user.setUserAccount(userAccount);
+        user.setUserName(trueName);
         user.setUserPwd("123");
         user.setAge(20);
         user.setTrueName(trueName);
         user.setContent("备注信息");
         user.setUserClass(userClass);
         user.setTeacher(isTeacher);
+        return user;
+    }
+
+    private static User createUser(User user){
+        user.setAge(20);
+        user.setTrueName("待完善");
+        user.setContent("待完善");
+        user.setUserClass("待完善");
+        user.setUserName("待完善");
         return user;
     }
 }

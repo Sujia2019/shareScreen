@@ -4,6 +4,7 @@ import com.tute.wjl.context.DataContext;
 import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
+import com.tute.wjl.ui.RequestFrame;
 import com.tute.wjl.utils.Constants;
 import com.tute.wjl.utils.GzipUtils;
 import com.tute.wjl.utils.ThreadPoolUtil;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
@@ -28,35 +30,39 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Message message) throws Exception{
+    protected void channelRead0(ChannelHandlerContext ctx, Message message) {
 //        clientHandlerPool.execute(()->{
             switch (message.getMessageType()){
                 // 图片
                 case Constants.PICTURE:
                     // 进行图片资源的还原
-                    byte[] pic = new byte[0];
-                    try {
-                        pic = GzipUtils.ungzip(message.getFileContent());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    context.getLabel().setIcon(new ImageIcon(pic));
+                    getPicture(message);
                     break;
                 // 群聊(局部分组)
                 case Constants.ALL:
                     break;
                 // 私聊
                 case Constants.PRIVATE:
-                    // 发送共享屏幕请求
+                // 收到共享屏幕请求
                 case Constants.SHARE:
+                    dataContext.setTeacherId(message.getFromId());
+                    new RequestFrame(dataContext).setVisible(false);
                     break;
-                // 创建一个局部分组(开始上课)
-                case Constants.CREATE:
+                // 收到学生的接受共享屏幕
+                case Constants.SHARE_RECEIVE:
+                    DataContext.needStop = true;
+                    context.getLabel().setText("学生已接受。已停止您的屏幕共享");
+                    break;
+                // 开课成功
+                case Constants.CREATE_SUCCESS:
+                    createGroupSuccess(message);
+                    break;
                     // 开始上课
                 case Constants.START:
                     break;
-                // 加入课程
-                case Constants.ADD:
+                // 加入课程成功
+                case Constants.ADD_SUCCESS:
+                    joinGroup(message);
                     break;
                 // 退出群组
                 case Constants.QUIT:
@@ -95,22 +101,29 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
             return;
         }
         user = (User) message.getContent();
-        if(message.getToId().equals(Constants.LOGIN_SUCCESS)){
-            getLoginInfo(user);
-            if(user.isTeacher()){
-                createGroup(ctx);
-            }else{
-                addGroup(ctx);
-            }
-        }
+
+        getLoginInfo(message,user);
     }
 
     // 获取登陆信息
-    private void getLoginInfo(User user){
-        System.out.println("登陆成功！\n"+user);
-        dataContext.setUser(user);
-        context.getLoginFrame().setVisible(false);
-        context.getShareFrame().setVisible(true);
+    private void getLoginInfo(Message message,User user){
+        // 如果登陆成功或注册成功
+        if(message.getToId().equals(Constants.LOGIN_SUCCESS)||message.getToId().equals(Constants.REGISTER_SUCCESS)){
+            System.out.println("登陆成功！\n"+user);
+            dataContext.setUser(user);
+            context.getLoginFrame().setVisible(false);
+            if(user.isTeacher()){
+                context.getTeacherFrame().setVisible(true);
+            }else{
+                // 学生不能请求他人共享屏幕等
+                context.getCloseButton().setEnabled(false);
+                context.getRequestButton().setEnabled(false);
+                context.getShareButton().setEnabled(false);
+                context.getEndButton().setText("退出课堂");
+                context.getStudentFrame().setVisible(true);
+            }
+        }
+//        context.getShareFrame().setVisible(true);
     }
 
     private void errorMsg(Message message){
@@ -118,25 +131,43 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
         context.getError().setVisible(true);
     }
 
-    // 开课
-    private void createGroup(ChannelHandlerContext ctx){
-        Message message = initMessage(Constants.CREATE);
-        message.setToId("网络工程");
-        ctx.writeAndFlush(message);
+    // 开课成功 打开授课页面
+    private void createGroupSuccess(Message message){
+        context.getShareFrame().setVisible(true);
+        dataContext.setShareGroupName(message.getToId());
     }
 
-    // 加入课程
-    private void addGroup(ChannelHandlerContext ctx){
-        Message message = initMessage(Constants.ADD);
-        message.setToId("网络工程");
-        ctx.writeAndFlush(message);
+    // 进入课堂
+    private void joinGroup(Message message){
+        context.getShareFrame().setVisible(true);
+        dataContext.setShareGroupName(message.getToId());
     }
 
-    private Message initMessage(String messageType){
-        Message message = new Message();
-        User user = dataContext.getUser();
-        message.setFromId(user.getUserAccount());
-        message.setMessageType(messageType);
-        return message;
+    // 加入课程成功，在列表中显示自己
+    private void addSuccess(){
+//        context.getUserList().getModel().
+//        context.getUserList().setListData();
     }
+
+    private void getPicture(Message message){
+        // 如果成功打开了页面
+        if(context.getShareFrame().isVisible()){
+            // 进行图片资源的还原
+            byte[] pic = new byte[0];
+            try {
+                pic = GzipUtils.ungzip(message.getFileContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //图片等比压缩
+            ImageIcon icon = new ImageIcon(pic);
+            Image img = icon.getImage();// 获得此图标的Image
+            int width = context.getLabel().getWidth();
+            int height = context.getLabel().getHeight();
+            img = img.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING);// 将image压缩后得到压缩后的img
+            icon.setImage(img);// 将图标设置为压缩后的图像
+            context.getLabel().setIcon(icon);
+        }
+    }
+
 }

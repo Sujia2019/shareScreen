@@ -2,6 +2,7 @@ package com.tute.wjl.service;
 
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.net.NettyServer;
+import com.tute.wjl.utils.Constants;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;
@@ -35,12 +36,14 @@ public class GroupService {
 
 
     // 创建分组
-    public void createGroup(Message message){
+    public void createGroup(Message message,ChannelHandlerContext ctx){
         ChannelGroup cg = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
         System.out.println("创建分组：分组ID "+message.getToId());
         groupMap.put(message.getToId(),cg);
         // ...记得把自己加入分组，，，
-        addGroup(message,null);
+        message.setMessageType(Constants.CREATE_SUCCESS);
+        ctx.writeAndFlush(message);
+        addGroup(message,ctx);
     }
 
     // 销毁分组
@@ -55,6 +58,9 @@ public class GroupService {
         ChannelGroup cg = groupMap.get(message.getToId());
         if (cg != null){
             cg.add(NettyServer.group.find(channelId));
+            // 返回加入成功的信息
+            message.setMessageType(Constants.ADD_SUCCESS);
+            ctx.writeAndFlush(message);
         }else{
             ctx.writeAndFlush(new Message("加入失败，暂时还没有开课哦～"));
         }
