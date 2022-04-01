@@ -47,8 +47,13 @@ public class GroupService {
     }
 
     // 销毁分组
-    public void destoryGroup(Message message){
-        groupMap.get(message.getToId()).close();
+    public void destroyGroup(Message message,ChannelHandlerContext ctx){
+        ChannelGroup group = groupMap.get(message.getToId());
+        // 移除自己
+        group.remove(ctx.channel());
+        // 发送关闭信息
+        group.writeAndFlush(message);
+        group.close();
         groupMap.remove(message.getToId());
     }
 
@@ -67,8 +72,11 @@ public class GroupService {
     }
 
     // 退出分组
-    public void quitGroup(Message message){
-        ChannelId channelId = userMap.get(message.getFromId());
-        groupMap.get(message.getToId()).remove(NettyServer.group.find(channelId));
+    public void quitGroup(Message message,ChannelHandlerContext ctx){
+        String toId = message.getToId();
+        if(groupMap.containsKey(toId)){
+            ChannelId channelId = userMap.get(message.getFromId());
+            groupMap.get(toId).remove(NettyServer.group.find(channelId));
+        }
     }
 }

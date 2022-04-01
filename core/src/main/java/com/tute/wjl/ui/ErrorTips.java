@@ -22,13 +22,13 @@ public class ErrorTips extends JFrame {
     }
 
     public ErrorTips(String errorMessage){
+        initComponents();
         errorMsg.setText(errorMessage);
         setVisible(true);
     }
 
     private void click(MouseEvent e) {
-        // TODO add your code here
-        setVisible(false);
+        dispose();
     }
 
     private void initComponents() {

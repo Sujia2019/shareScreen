@@ -21,6 +21,7 @@ public class ChatService {
 
     public void sendMessageToOne(Message sm) {
         String toId = sm.getToId();
+        System.out.println(toId);
         ChannelId id = GroupService.userMap.get(toId);
         Channel channel = NettyServer.group.find(id);
         if(channel.isActive()){

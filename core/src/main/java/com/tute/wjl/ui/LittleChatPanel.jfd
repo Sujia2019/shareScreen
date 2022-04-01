@@ -1,0 +1,38 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "1.8.0_152-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp separator1::l:::x, seq {space :::p, par l {comp scrollPane1:::::x, seq {comp scrollPane2:::p:324:p, space :::p, comp sendButton::::46:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p:288:p, space :::p, comp separator1:::p::p, space :::p, par l {comp scrollPane2::::102:x, comp sendButton::::102:x}, space :::p}}"
+		} ) {
+			name: "this"
+			"resizable": false
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "chatLogArea"
+					"editable": false
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator1"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "inputArea"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "sendButton"
+				"text": "发送"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sendButtonMouseClicked", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 390, 450 )
+		} )
+	}
+}

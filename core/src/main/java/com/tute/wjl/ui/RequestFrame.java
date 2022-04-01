@@ -19,8 +19,12 @@ import javax.swing.GroupLayout;
  */
 public class RequestFrame extends JFrame {
     private DataContext dataContext;
-    public RequestFrame(DataContext dataContext) {
+    private JButton shareButton;
+    private JButton closeButton;
+    public RequestFrame(DataContext dataContext,JButton b1,JButton b2) {
         this.dataContext = dataContext;
+        this.shareButton = b1;
+        this.closeButton = b2;
         initComponents();
     }
 
@@ -29,13 +33,10 @@ public class RequestFrame extends JFrame {
         Message message = dataContext.initMessage(Constants.SHARE_RECEIVE);
         message.setToId(dataContext.getTeacherId());
         ClientApplication.send(message);
+        DataContext.isReceive = true;
+        shareButton.setEnabled(true);
+        closeButton.setEnabled(true);
 
-        try {
-            // 三秒后开始共享屏幕
-            Thread.sleep(3000);
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
-        }
     }
 
     private void refuseMouseClicked(MouseEvent e) {
@@ -43,6 +44,8 @@ public class RequestFrame extends JFrame {
         Message message = dataContext.initMessage(Constants.SHARE_REFUSE);
         message.setToId(dataContext.getTeacherId());
         ClientApplication.send(message);
+        DataContext.isReceive = false;
+        dispose();
     }
 
     private void initComponents() {

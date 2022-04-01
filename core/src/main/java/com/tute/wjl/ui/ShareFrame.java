@@ -23,9 +23,11 @@ import javax.swing.*;
 @Data
 public class ShareFrame extends JFrame {
     private DataContext dataContext;
+    private BoardController boardController;
 
-    public ShareFrame(DataContext dataContext) {
+    public ShareFrame(DataContext dataContext,BoardController boardController) {
         this.dataContext = dataContext;
+        this.boardController = boardController;
         initComponents();
     }
 
@@ -35,6 +37,9 @@ public class ShareFrame extends JFrame {
 
     private void startShareScreen(MouseEvent e) {
         if(dataContext.getUser().isTeacher()){
+            DataContext.needStop = false;
+            boardController.setVisible(true);
+            system.setVisible(false);
             new Thread(new ShareScreen()).start();
         }
         // TODO add your code here
@@ -44,30 +49,33 @@ public class ShareFrame extends JFrame {
         // TODO add your code here
         Message message = dataContext.initMessage(type);
         message.setContent(msg);
-        message.setToId(dataContext.getShareGroupName());
-        message.setFromName(dataContext.getUser().getTrueName());
+        message.setToId(toId);
         ClientApplication.send(message);
 
     }
 
     private void sendToOneMouseClicked(MouseEvent e) {
         // TODO add your code here
+        String toUser = userList.getSelectedValue();
         String content = inputArea.getText();
-        String[] array = content.split("\\(");
+        String[] array = toUser.split("\\(");
         String res = array[1].substring(0,array[1].length()-1);
         // 发送私聊
-        sendMessage(Constants.PRIVATE,content,res);
+        if(StringUtil.isNullOrEmpty(content)){
+            new ErrorTips("请不要发送空信息").setVisible(true);
+        }else{
+            // 发送组内信息
+            sendMessage(Constants.PRIVATE,content,res);
+        }
     }
 
     private void sendToAllMouseClicked(MouseEvent e) {
         // TODO add your code here
         String content = inputArea.getText();
         if(StringUtil.isNullOrEmpty(content)){
-            ErrorTips error = new ErrorTips();
-            error.getErrorMsg().setText("请不要发送空信息");
-            error.setVisible(true);
+            new ErrorTips("请不要发送空信息").setVisible(true);
         }else{
-            // 发送全部信息
+            // 发送组内信息
             sendMessage(Constants.ALL,content,dataContext.getShareGroupName());
         }
 
@@ -82,6 +90,20 @@ public class ShareFrame extends JFrame {
             ClientApplication.send(message);
         }else{
             new ErrorTips("未指定学生");
+        }
+    }
+
+    private void closeButtonMouseClicked(MouseEvent e) {
+        DataContext.needStop = true;
+        screen.setText("您已停止共享屏幕");
+    }
+
+    private void endButtonMouseClicked(MouseEvent e) {
+        if(dataContext.getUser().isTeacher()){
+            sendMessage(Constants.END,"结束课程",dataContext.getShareGroupName());
+
+        }else{
+            sendMessage(Constants.QUIT,"退出课程",dataContext.getShareGroupName());
         }
     }
 
@@ -101,6 +123,7 @@ public class ShareFrame extends JFrame {
                 // 10帧  10
                 Thread.sleep(33);
             }
+            system.setVisible(true);
         }
     }
 
@@ -111,7 +134,7 @@ public class ShareFrame extends JFrame {
         chatPanel = new JPanel();
         userNames = new JPanel();
         scrollPane3 = new JScrollPane();
-        chatLog = new JList();
+        chatLog = new JTextArea();
         chatLogs = new JPanel();
         scrollPane4 = new JScrollPane();
         userList = new JList<>();
@@ -138,12 +161,11 @@ public class ShareFrame extends JFrame {
             {
                 chatPanel.setBackground(Color.white);
                 chatPanel.setForeground(new Color(102, 102, 102));
-                chatPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing.
-                border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER
-                , javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font
-                .BOLD ,12 ), java. awt. Color. red) ,chatPanel. getBorder( )) ); chatPanel. addPropertyChangeListener (
-                new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r"
-                .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+                chatPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+                0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                . BOTTOM, new java .awt .Font ("D\u0069alog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+                red) ,chatPanel. getBorder( )) ); chatPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+                beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
 
                 //======== userNames ========
                 {
@@ -151,6 +173,9 @@ public class ShareFrame extends JFrame {
 
                     //======== scrollPane3 ========
                     {
+
+                        //---- chatLog ----
+                        chatLog.setEditable(false);
                         scrollPane3.setViewportView(chatLog);
                     }
 
@@ -294,9 +319,21 @@ public class ShareFrame extends JFrame {
 
                 //---- closeButton ----
                 closeButton.setText("\u7ed3\u675f\u5171\u4eab");
+                closeButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        closeButtonMouseClicked(e);
+                    }
+                });
 
                 //---- endButton ----
                 endButton.setText("\u7ed3\u675f\u8bfe\u7a0b");
+                endButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        endButtonMouseClicked(e);
+                    }
+                });
 
                 //---- requestButton ----
                 requestButton.setText("\u8bf7\u6c42\u5171\u4eab");
@@ -376,7 +413,7 @@ public class ShareFrame extends JFrame {
     private JPanel chatPanel;
     private JPanel userNames;
     private JScrollPane scrollPane3;
-    private JList chatLog;
+    private JTextArea chatLog;
     private JPanel chatLogs;
     private JScrollPane scrollPane4;
     private JList<String> userList;

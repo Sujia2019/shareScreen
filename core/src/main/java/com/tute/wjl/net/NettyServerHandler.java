@@ -56,17 +56,17 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                 case Constants.START:
                     groupService.createGroup(message,ctx);
                     break;
+                // 结束课程
+                case Constants.END:
+                    groupService.destroyGroup(message,ctx);
+                    break;
                 // 加入课程
                 case Constants.ADD:
                     groupService.addGroup(message,ctx);
                     break;
                 // 退出群组
                 case Constants.QUIT:
-                    groupService.quitGroup(message);
-                    break;
-                // 结束上课
-                case Constants.END:
-                    groupService.destoryGroup(message);
+                    groupService.quitGroup(message,ctx);
                     break;
                 // 用户业务
                 case Constants.USER:

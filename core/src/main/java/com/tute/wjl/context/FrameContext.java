@@ -19,4 +19,7 @@ public class FrameContext {
     private JButton requestButton;
     private JButton endButton;
     private JButton closeButton;
+    private JFrame boardController;
+    private JTextArea bigChatArea;
+    private JTextArea littleChatArea;
 }

@@ -23,8 +23,7 @@ public class ClientApplication {
 
     // 加载界面
     private void init() {
-        ShareFrame shareFrame = new ShareFrame(dataContext);
-        shareFrame.getSystem().setVisible(false);
+
 
         LoginFrame loginFrame = new LoginFrame(dataContext);
         loginFrame.setVisible(true);
@@ -34,6 +33,16 @@ public class ClientApplication {
 
         StudentMainFrame studentFrame = new StudentMainFrame(dataContext);
         studentFrame.setVisible(false);
+
+        LittleChatPanel littleChatPanel = new LittleChatPanel(dataContext);
+        littleChatPanel.setVisible(false);
+
+        BoardController controller = new BoardController(dataContext,littleChatPanel);
+        controller.setVisible(false);
+
+        ShareFrame shareFrame = new ShareFrame(dataContext,controller);
+        shareFrame.getSystem().setVisible(false);
+
 
         context.setLoginFrame(loginFrame);
         context.setShareFrame(shareFrame.getSystem());
@@ -45,6 +54,10 @@ public class ClientApplication {
         context.setRequestButton(shareFrame.getRequestButton());
         context.setShareButton(shareFrame.getShareButton());
         context.setCloseButton(shareFrame.getCloseButton());
+        context.setBoardController(controller);
+        context.setBigChatArea(shareFrame.getChatLog());
+        context.setLittleChatArea(littleChatPanel.getChatLogArea());
+
 
 
 

@@ -1,0 +1,31 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "1.8.0_152-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp showChat:::p:80:p, space :::p, comp closeShare:::p:80:p, space :::p, comp drawPanel:::p:80:p, space ::5:x}}"
+			"$verticalGroup": "par l {seq l {space :p:26:p, par b {comp showChat::b:p:50:p, comp closeShare::b:p:50:p, comp drawPanel::b:p:50:p}, space ::15:x}}"
+		} ) {
+			name: "this"
+			"title": "控制板"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "showChat"
+				"text": "显示聊天"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "showChatMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "closeShare"
+				"text": "结束共享"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "closeShareMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "drawPanel"
+				"text": "绘画板"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 265, 115 )
+		} )
+	}
+}

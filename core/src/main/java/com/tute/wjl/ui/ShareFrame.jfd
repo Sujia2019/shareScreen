@@ -26,8 +26,9 @@ new FormModel {
 					"background": new java.awt.Color( 255, 204, 255, 255 )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane3"
-						add( new FormComponent( "javax.swing.JList" ) {
+						add( new FormComponent( "javax.swing.JTextArea" ) {
 							name: "chatLog"
+							"editable": false
 						} )
 					} )
 				} )
@@ -90,10 +91,12 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "closeButton"
 					"text": "结束共享"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "closeButtonMouseClicked", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "endButton"
 					"text": "结束课程"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "endButtonMouseClicked", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "requestButton"

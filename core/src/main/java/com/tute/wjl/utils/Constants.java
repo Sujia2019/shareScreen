@@ -8,12 +8,12 @@ public class Constants {
     public static final String GROUP = "GROUP";                          // 发送群聊
     public static final String PRIVATE = "PRIVATE";                      // 私聊
     public static final String CREATE = "CREATE";                        // 创建课程
-    public static final String CREATE_SUCCESS = "CREATE_SUCCESS";        // 创建课程
+    public static final String CREATE_SUCCESS = "CREATE_SUCCESS";        // 创建课程成功
     public static final String START = "START"    ;                      // 开始共享屏幕
-    public static final String END = "END"    ;                          // 结束共享屏幕
+    public static final String END = "END"    ;                          // 结束课程
     public static final String ADD = "ADD";                              // 加入课程
     public static final String ADD_SUCCESS = "ADD_SUCCESS";              // 加入课程成功
-    public static final String QUIT = "QUIT";                            // 退出
+    public static final String QUIT = "QUIT";                            // 退出课程
     public static final String ERROR = "ERROR";                          // 错误信息
     public static final String RETURN = "RETURN";
     public static final String SHARE = "SHARE";                          // 向学生发出演示请求

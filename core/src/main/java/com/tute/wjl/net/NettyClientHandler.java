@@ -4,6 +4,7 @@ import com.tute.wjl.context.DataContext;
 import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
+import com.tute.wjl.ui.ErrorTips;
 import com.tute.wjl.ui.RequestFrame;
 import com.tute.wjl.utils.Constants;
 import com.tute.wjl.utils.GzipUtils;
@@ -38,15 +39,18 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                     // 进行图片资源的还原
                     getPicture(message);
                     break;
-                // 群聊(局部分组)
+                // 群聊(局部分组) 收到群聊消息
                 case Constants.ALL:
+                    receiveGroupMessage(message);
                     break;
                 // 私聊
                 case Constants.PRIVATE:
+                    receivePrivateMessage(message);
+                    break;
                 // 收到共享屏幕请求
                 case Constants.SHARE:
                     dataContext.setTeacherId(message.getFromId());
-                    new RequestFrame(dataContext).setVisible(false);
+                    new RequestFrame(dataContext,context.getCloseButton(),context.getShareButton()).setVisible(true);
                     break;
                 // 收到学生的接受共享屏幕
                 case Constants.SHARE_RECEIVE:
@@ -57,7 +61,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                 case Constants.CREATE_SUCCESS:
                     createGroupSuccess(message);
                     break;
-                    // 开始上课
+                // 开始上课
                 case Constants.START:
                     break;
                 // 加入课程成功
@@ -69,6 +73,8 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                     break;
                 // 结束上课
                 case Constants.END:
+                    new ErrorTips("老师已下课！");
+                    context.getShareFrame().dispose();
                     break;
                 // 用户业务
                 case Constants.USER:
@@ -111,7 +117,8 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
         if(message.getToId().equals(Constants.LOGIN_SUCCESS)||message.getToId().equals(Constants.REGISTER_SUCCESS)){
             System.out.println("登陆成功！\n"+user);
             dataContext.setUser(user);
-            context.getLoginFrame().setVisible(false);
+            // 关闭登陆窗口
+            context.getLoginFrame().dispose();
             if(user.isTeacher()){
                 context.getTeacherFrame().setVisible(true);
             }else{
@@ -168,6 +175,26 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
             icon.setImage(img);// 将图标设置为压缩后的图像
             context.getLabel().setIcon(icon);
         }
+    }
+
+    private void receiveGroupMessage(Message message){
+        // 如果是自己发的
+        String content = context.getLittleChatArea().getText()+"\n\n";
+        String self = content+"（我）:\n  "+message.getContent();
+        String all = content+" 来自【"+message.getFromName()+"】所有人消息:\n  "+message.getContent();
+        if(message.getFromId().equals(dataContext.getUser().getUserAccount())){
+            context.getLittleChatArea().setText(self);
+            context.getBigChatArea().setText(self);
+        }else{
+            context.getLittleChatArea().setText(all);
+            context.getBigChatArea().setText(all);
+        }
+    }
+
+    private void receivePrivateMessage(Message message){
+        String content = context.getLittleChatArea().getText()+"\n\n 来自【"+message.getFromName()+"】私聊消息:\n  "+message.getContent();
+        context.getBigChatArea().setText(content);
+        context.getLittleChatArea().setText(content);
     }
 
 }
