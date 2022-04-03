@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tute.wjl.mapper.UserMapper">
+    <select id="login" parameterType="com.tute.wjl.entity.User" resultMap="UserResult">
+        select * from education.user where user_account=#{userAccount} and user_pwd=#{userPwd} and is_teacher=#{isTeacher}
+    </select>
+
+    <insert id="insert" parameterType="com.tute.wjl.entity.User">
+        insert into education.user (id, user_account, user_name, true_name, user_pwd, age, class, content, is_teacher)
+        values (null,#{userAccount},#{userName},#{trueName},#{userPwd},#{age},#{userClass},#{content},#{isTeacher});
+    </insert>
+
+    <update id="update" parameterType="com.tute.wjl.entity.User">
+        update education.user
+        set user_name=#{userName},true_name =#{trueName},
+            user_pwd=#{userPwd},age=#{age},class=#{userClass},content=#{content}
+        where user_account=#{userAccount};
+    </update>
+
+    <select id="getCountByAccount" parameterType="String" resultType="Integer">
+        select count(*) from education.user where user.user_account=#{userAccount}
+    </select>
+
+    <resultMap type="com.tute.wjl.entity.User" id="UserResult">
+        <id property="id" column="id"/>
+        <result property="userAccount" column="user_account"/>
+        <result property="userName" column="user_name"/>
+        <result property="trueName" column="true_name"/>
+        <result property="userPwd" column="user_pwd"/>
+        <result property="age" column="age"/>
+        <result property="content" column="content"/>
+        <result property="isTeacher" column="is_teacher"/>
+    </resultMap>
+</mapper>

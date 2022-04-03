@@ -49,7 +49,7 @@ public class PictureService {
     }
 
     // 截图并发送文件
-    public Message sendPicByte(Message message) throws Exception {
+    public void sendPicByte(Message message) throws Exception {
         shotCutAndSavePicture();
         byte[] picByte = new byte[fins.available()];
         System.out.println("截屏信息："+fins.available());
@@ -60,7 +60,6 @@ public class PictureService {
         message.setFileContent(send);
         // 告知文件长度
         message.setLength(send.length);
-        return message;
     }
 
     // 获取字节流转换为图片，设置到屏幕上

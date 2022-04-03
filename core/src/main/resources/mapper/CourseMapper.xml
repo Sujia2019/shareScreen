@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tute.wjl.mapper.CourseMapper">
+    <select id="getByClass" parameterType="String" resultMap="CourseResult">
+        select * from education.course where course_class=#{courseClass}
+    </select>
+
+    <select id="getByTeacher" parameterType="String" resultMap="CourseResult">
+        select * from education.course where course_teacher=#{teacherName}
+    </select>
+
+    <select id="getByName" parameterType="String" resultMap="CourseResult">
+        select * from education.course where course_name like concat('%',#{courseName},'%')
+    </select>
+
+    <insert id="insert" parameterType="com.tute.wjl.entity.Course">
+        insert into education.course(id, course_name, course_content, course_teacher,
+                                     course_class, course_hours, course_time)
+        values (null,#{courseName},#{courseContent},#{courseTeacher},#{courseClass},#{courseHours},#{courseTime})
+    </insert>
+
+    <update id="update" parameterType="com.tute.wjl.entity.Course">
+        update education.course
+        set course_name=#{courseName},course_teacher=#{courseTeacher},
+            course_class=#{courseClass},course_content=#{courseContent},
+            course_hours=#{courseHours},course_time=#{courseTime}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from education.course where id=#{id}
+    </delete>
+
+    <resultMap type="com.tute.wjl.entity.Course" id="CourseResult">
+        <id property="id" column="id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseContent" column="course_content"/>
+        <result property="courseTeacher" column="course_teacher"/>
+        <result property="courseClass" column="course_class"/>
+        <result property="courseHours" column="course_hours"/>
+        <result property="courseTime" column="course_time"/>
+    </resultMap>
+</mapper>

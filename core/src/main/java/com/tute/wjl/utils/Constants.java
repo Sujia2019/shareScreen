@@ -30,6 +30,21 @@ public class Constants {
     public static final String LOGIN_SUCCESS = "LOGIN_SUCCESS";          // 登陆成功
     public static final String REGISTER = "REGISTER";                    // 注册
     public static final String REGISTER_SUCCESS = "REGISTER_SUCCESS";    // 注册
+    public static final String USER_UPDATE = "USER_UPDATE";              // 修改用户信息
+    public static final String USER_UPDATE_SUCCESS = "USER_UPDATE_SUCCESS";
+
+    public static final String COURSE_NEW = "COURSE_NEW";                // 创建新课程
+    public static final String COURSE_NEW_SUCCESS = "COURSE_NEW_SUCCESS";
+    public static final String COURSE_DELETE = "COURSE_DELETE";          // 删除课程
+    public static final String COURSE_DELETE_SUCCESS = "COURSE_DELETE_SUCCESS";
+    public static final String COURSE_UPDATE = "COURSE_UPDATE";          // 更新课程
+    public static final String COURSE_UPDATE_SUCCESS = "COURSE_UPDATE_SUCCESS";
+    public static final String COURSE_SEARCH = "COURSE_SEARCH";          // 根据名字查询课程
+    public static final String COURSE_SEARCH_SUCCESS = "COURSE_SEARCH_SUCCESS";
+    public static final String COURSE_CLASS = "COURSE_CLASS";            // 通过班级查询课程
+    public static final String COURSE_CLASS_SUCCESS = "COURSE_CLASS_SUCCESS";
+    public static final String COURSE_TEACHER = "COURSE_TEACHER";        // 通过教师查询课程
+    public static final String COURSE_TEACHER_SUCCESS = "COURSE_TEACHER_SUCCESS";        // 通过教师查询课程
 
 
 

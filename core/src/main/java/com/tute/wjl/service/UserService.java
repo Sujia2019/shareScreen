@@ -1,6 +1,11 @@
 package com.tute.wjl.service;
 
+import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
+import com.tute.wjl.utils.Constants;
+import com.tute.wjl.utils.MybatisConf;
+import io.netty.channel.ChannelHandlerContext;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +13,7 @@ import java.util.Map;
 public class UserService {
     private static UserService instance;
     public static Map<String,User> users = new HashMap<>();
+    private SqlSession session = MybatisConf.getSqlSession();
 
     static {
         users.put("123",createUser("123","123","网络工程",false));
@@ -27,40 +33,54 @@ public class UserService {
         return instance;
     }
 
-    public User doLogin(User user){
-        String userAccount = user.getUserAccount();
-        String userPwd = user.getUserPwd();
-        if(users.containsKey(userAccount)){
-            User src = users.get(userAccount);
-            if(src != null){
-                if(src.isTeacher()!=user.isTeacher()){
-                    return null;
-                }
-                if(src.getUserPwd().equals(userPwd)){
-                    return src;
-                }
+    public void doLogin(Message message,ChannelHandlerContext ctx){
+        User user = (User) message.getContent();
+        user = session.selectOne("login",user);
+        if(user!=null){
+            loginSuccess(ctx,user,Constants.LOGIN_SUCCESS);
+        }else{
+            Message res = new Message("登陆失败,用户名或密码错误");
+            ctx.writeAndFlush(res);
+        }
+
+    }
+
+    private void loginSuccess(ChannelHandlerContext ctx, User user,String type) {
+        GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
+        Message res = new Message();
+        res.setContent(user);
+        res.setMessageType(Constants.USER);
+        res.setToId(type);
+        res.setFromId("SERVER");
+        ctx.writeAndFlush(res);
+    }
+
+    public void doRegister(Message message, ChannelHandlerContext ctx){
+        User user = (User) message.getContent();
+        if(session.selectOne("getCountByAccount",user.getUserAccount()).equals(0)){
+            createUser(user);
+            if(session.insert("com.tute.wjl.mapper.UserMapper.insert",user)>0){
+                session.commit();
+                loginSuccess(ctx,user,Constants.REGISTER_SUCCESS);
             }
+        }else{
+            Message res = new Message("注册失败，账号已存在");
+            ctx.writeAndFlush(res);
         }
-        return null;
-    }
-
-    public User doRegister(User user){
-        String userAccount = user.getUserAccount();
-        if(users.containsKey(userAccount)){
-            return null;
-        }
-        createUser(user);
-        users.put(userAccount,user);
-        return user;
     }
 
 
-    public User updateUser(User user){
-        String userAccount = user.getUserAccount();
-        if(users.get(userAccount)!=null){
-            users.put(userAccount,user);
+    public void updateUser(Message message,ChannelHandlerContext ctx){
+        User user = (User) message.getContent();
+        if(session.update("com.tute.wjl.mapper.UserMapper.update",user)>0){
+            session.commit();
+            message.setFromId("SERVER");
+            message.setToId(Constants.USER_UPDATE_SUCCESS);
+            ctx.writeAndFlush(message);
+        }else{
+            Message res = new Message("更新失败");
+            ctx.writeAndFlush(res);
         }
-        return user;
     }
 
 
@@ -77,12 +97,13 @@ public class UserService {
         return user;
     }
 
-    private static User createUser(User user){
+    private User createUser(User user){
         user.setAge(20);
         user.setTrueName("待完善");
         user.setContent("待完善");
         user.setUserClass("待完善");
-        user.setUserName("待完善");
+        user.setUserName("用户"+user.getUserAccount());
+        user.setUserClass("待完善");
         return user;
     }
 }

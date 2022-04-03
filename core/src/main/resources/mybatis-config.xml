@@ -33,8 +33,8 @@
             <transactionManager type="JDBC"/>
             <!-- 数据源，池类型的数据源 -->
             <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://101.201.83.84:13306/education?useUnicode=true&amp;characterEncoding=UTF-8"/>
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://101.201.83.84:13306/education?characterEncoding=utf8&amp;useSSL=false&amp;"/>
                 <property name="username" value="root"/>
                 <property name="password" value="19990315"/>
             </dataSource>

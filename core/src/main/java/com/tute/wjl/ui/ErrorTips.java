@@ -26,6 +26,12 @@ public class ErrorTips extends JFrame {
         errorMsg.setText(errorMessage);
         setVisible(true);
     }
+    public ErrorTips(String errorTitle,String errorMessage){
+        initComponents();
+        label1.setText(errorTitle);
+        errorMsg.setText(errorMessage);
+        setVisible(true);
+    }
 
     private void click(MouseEvent e) {
         dispose();

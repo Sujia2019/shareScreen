@@ -1,8 +1,10 @@
 package com.tute.wjl.net;
 
+import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
 import com.tute.wjl.service.ChatService;
+import com.tute.wjl.service.CourseService;
 import com.tute.wjl.service.GroupService;
 import com.tute.wjl.service.UserService;
 import com.tute.wjl.utils.Constants;
@@ -22,12 +24,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
     private final ChatService chatService;
     private final GroupService groupService;
     private final UserService userService;
+    private final CourseService courseService;
 
     public NettyServerHandler() {
         this.serverHandlerPool= ThreadPoolUtil.ThreadPool(NettyServer.class.getSimpleName());
         chatService = ChatService.getInstance();
         groupService = GroupService.getInstance();
         userService = UserService.getInstance();
+        courseService = CourseService.getInstance();
     }
 
     @Override
@@ -37,7 +41,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             switch (message.getMessageType()){
                 // 图片
                 case Constants.PICTURE:
-//                    NettyServer.group.writeAndFlush(message);
                     // 群聊(局部分组)
                 case Constants.ALL:
                     chatService.sendMessageToGroup(message);
@@ -72,15 +75,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                 case Constants.USER:
                     doUser(message,ctx);
                     break;
+                case Constants.COURSE:
+                    doCourse(message,ctx);
                 default:
                     LOGGER.info("message type is not defined");
 
 
             }
-
 //            ctx.writeAndFlush(message);
-
-
         });
 
     }
@@ -111,44 +113,46 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
     }
 
     private void doUser(Message message, ChannelHandlerContext ctx){
-        Object obj = message.getContent();
+        String target = message.getToId();
         if(message.getContent() instanceof User){
-            User user = (User) obj;
-            if(message.getToId().equals(Constants.LOGIN)){
-                user = userService.doLogin(user);
-                if(user!=null){
-                    // 登陆成功，将自己注册到map当中
-                    Message res = loginSuccess(ctx, user);
-                    res.setToId(Constants.LOGIN_SUCCESS);
-                    res.setFromId("SERVER");
-                    ctx.writeAndFlush(res);
-                }else{
-                    Message res = new Message("登陆失败,用户名或密码错误");
-                    ctx.writeAndFlush(res);
-                }
-            }else if(message.getToId().equals(Constants.REGISTER)){
-                user = userService.doRegister(user);
-                if(user!=null){
-                    // 注册成功，将自己注册到map当中
-                    Message res = loginSuccess(ctx, user);
-                    res.setToId(Constants.REGISTER_SUCCESS);
-                    res.setFromId("SERVER");
-                    ctx.writeAndFlush(res);
-                }else{
-                    Message res = new Message("注册失败，账号已存在");
-                    ctx.writeAndFlush(res);
-                }
+            switch (target) {
+                case Constants.LOGIN:
+                    userService.doLogin(message, ctx);
+                    break;
+                case Constants.REGISTER:
+                    userService.doRegister(message, ctx);
+                    break;
+                case Constants.USER_UPDATE:
+                    userService.updateUser(message, ctx);
+                    break;
             }
-//            GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
         }
     }
 
-    private Message loginSuccess(ChannelHandlerContext ctx, User user) {
-        GroupService.userMap.put(user.getUserAccount(),ctx.channel().id());
-        Message res = new Message();
-        res.setContent(user);
-        res.setMessageType(Constants.USER);
-        return res;
+    private void doCourse(Message message,ChannelHandlerContext ctx){
+        if(message.getContent() instanceof Course){
+            switch (message.getToId()){
+                case Constants.COURSE_CLASS:
+                    courseService.getCourseByClass(message);
+                    break;
+                case Constants.COURSE_DELETE:
+                    courseService.delete(message);
+                    break;
+                case Constants.COURSE_SEARCH:
+                    courseService.getCourseByName(message);
+                    break;
+                case Constants.COURSE_NEW:
+                    courseService.insert(message);
+                    break;
+                case Constants.COURSE_TEACHER:
+                    courseService.getCourseByTeacher(message);
+                case Constants.COURSE_UPDATE:
+                    courseService.update(message);
+                default:
+                    break;
+            }
+            ctx.writeAndFlush(message);
+        }
     }
 
 }

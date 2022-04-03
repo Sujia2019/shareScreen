@@ -15,7 +15,7 @@ public class MybatisConf {
         // 读取配置文件
         InputStream inputStream = null;
         try {
-            String resource = "mybatis/mybatis-config.xml";
+            String resource = "mybatis-config.xml";
             inputStream = Resources.getResourceAsStream(resource);
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,7 +26,6 @@ public class MybatisConf {
     }
 
     public static SqlSession getSqlSession() {
-
         return sqlSessionFactory.openSession();
     }
 }
