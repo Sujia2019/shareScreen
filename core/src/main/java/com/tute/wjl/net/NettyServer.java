@@ -43,7 +43,10 @@ public class NettyServer {
                     pipeline.addLast(new NettyEncoder());
                     pipeline.addLast(new NettyServerHandler());
                 }
-            }).childOption(ChannelOption.SO_KEEPALIVE, true);
+            }).childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .option(ChannelOption.SO_RCVBUF, 20 * 1024 * 1024)
+                    // 设置udp接收的字符长度可以超过2048 每次读取缓冲区最大长度
+                    .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(65535));
             //bind
             ChannelFuture future = bootstrap.bind(port).sync();
             LOGGER.info(">>>>>>>>>>>> server start success , port ={}",port);

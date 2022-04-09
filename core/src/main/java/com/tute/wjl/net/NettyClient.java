@@ -46,7 +46,9 @@ public class NettyClient {
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+                .option(ChannelOption.SO_BROADCAST, true) // UDP
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
+                .option(ChannelOption.SO_SNDBUF, 20 * 1024 * 1024);
         try {
             channel = bootstrap.connect(serverHost, port).sync().channel();
             if (!isValidate()) {

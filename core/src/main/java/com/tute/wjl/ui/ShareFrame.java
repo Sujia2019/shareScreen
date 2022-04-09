@@ -8,6 +8,7 @@ import com.tute.wjl.ClientApplication;
 import com.tute.wjl.context.DataContext;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.service.PictureService;
+import com.tute.wjl.service.VoiceService;
 import com.tute.wjl.utils.Constants;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class ShareFrame extends JFrame {
             boardController.setVisible(true);
             system.setVisible(false);
             new Thread(new ShareScreen()).start();
+            new Thread(new VoiceCapture()).start();
         }
     }
 
@@ -124,6 +126,19 @@ public class ShareFrame extends JFrame {
                 Thread.sleep(33);
             }
             system.setVisible(true);
+        }
+    }
+
+    class VoiceCapture implements Runnable{
+        @Override
+        public void run() {
+            VoiceService.getInstance().startCapture();
+            while (!DataContext.needStop){
+                Message message = dataContext.initMessage(Constants.VOICE);
+                message.setToId(dataContext.getShareGroupName());
+                VoiceService.getInstance().sendVoice(message);
+                ClientApplication.send(message);
+            }
         }
     }
 

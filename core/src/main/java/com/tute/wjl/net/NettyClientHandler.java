@@ -5,6 +5,7 @@ import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
+import com.tute.wjl.service.VoiceService;
 import com.tute.wjl.ui.ErrorTips;
 import com.tute.wjl.ui.RequestFrame;
 import com.tute.wjl.utils.Constants;
@@ -34,8 +35,11 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) {
-//        clientHandlerPool.execute(()->{
+        clientHandlerPool.execute(()->{
             switch (message.getMessageType()){
+                case Constants.VOICE:
+                    VoiceService.getInstance().playVoice(message);
+                    break;
                 // 图片
                 case Constants.PICTURE:
                     // 进行图片资源的还原
@@ -95,9 +99,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
             }
 //            ctx.writeAndFlush(message);
-//        });
-
-
+        });
     }
 
     @Override
@@ -153,6 +155,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
     private void createGroupSuccess(Message message){
         context.getShareFrame().setVisible(true);
         dataContext.setShareGroupName(message.getToId());
+        VoiceService.getInstance().startPlay();
     }
 
     // 进入课堂
@@ -160,6 +163,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
         setUserList(message);
         context.getShareFrame().setVisible(true);
         dataContext.setShareGroupName(message.getToId());
+        VoiceService.getInstance().startPlay();
     }
     private void setUserList(Message message){
         List res = (List) message.getContent();
