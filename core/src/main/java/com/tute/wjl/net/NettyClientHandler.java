@@ -113,31 +113,35 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
             return;
         }
         user = (User) message.getContent();
-        getLoginInfo(message,user);
+        String toId = message.getToId();
+        // 如果登陆成功或注册成功
+        if(toId.equals(Constants.LOGIN_SUCCESS)||toId.equals(Constants.REGISTER_SUCCESS)){
+            getLoginInfo(message,user);
+        }else if(toId.equals(Constants.USER_UPDATE_SUCCESS)) { // 更新成功
+            dataContext.setUser((User) message.getContent());
+            new ErrorTips("更新成功",message.getContent().toString());
+        }
     }
 
     // 获取登陆信息
-    private void getLoginInfo(Message message,User user){
-        // 如果登陆成功或注册成功
-        if(message.getToId().equals(Constants.LOGIN_SUCCESS)||message.getToId().equals(Constants.REGISTER_SUCCESS)){
-            System.out.println("登陆成功！\n"+user);
-            dataContext.setUser(user);
-            // 关闭登陆窗口
-            context.getLoginFrame().dispose();
-            dataContext.setTeacher(user.isTeacher());
-            if(user.isTeacher()){
-                dataContext.setTeacherId(user.getUserAccount());
-                context.getTeacherFrame().setVisible(true);
-            }else{
-                // 学生不能请求他人共享屏幕等
-                context.getCloseButton().setEnabled(false);
-                context.getRequestButton().setEnabled(false);
-                context.getShareButton().setEnabled(false);
-                context.getEndButton().setText("退出课堂");
-                context.getStudentFrame().setVisible(true);
-            }
+    private void getLoginInfo(Message message, User user) {
+        System.out.println("登陆成功！\n" + user);
+        dataContext.setUser(user);
+        // 关闭登陆窗口
+        context.getLoginFrame().dispose();
+        dataContext.setTeacher(user.isTeacher());
+        if (user.isTeacher()) {
+            dataContext.setTeacherId(user.getUserAccount());
+            context.getTeacherFrame().setVisible(true);
+        } else {
+            // 学生不能请求他人共享屏幕等
+            context.getCloseButton().setEnabled(false);
+            context.getRequestButton().setEnabled(false);
+            context.getShareButton().setEnabled(false);
+            context.getEndButton().setText("退出课堂");
+            context.getStudentFrame().setVisible(true);
         }
-//        context.getShareFrame().setVisible(true);
+
     }
 
     private void errorMsg(Message message){

@@ -1,0 +1,105 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "1.8.0_152-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq {space :p:42:p, par l {par l:l::p {seq {comp userNameLabel2:::p:34:p, space :::x, comp userName:::p:168:p}, seq {comp label1:::p:158:p, space :p:45:p, comp isTeacherLabel:::p:34:p}, seq t {comp accountLabel:::p:34:p, space :p:35:p, comp account:::p:168:p}}, seq l {comp ageLabel:::p:34:p, space :p:36:p, comp age:::p:168:p}, seq l {comp classLabel:::p:34:p, space :p:36:p, comp userClass:::p:168:p}, seq l {par t:::p {comp contentLabel3::l:::x, comp trueNameLabel::l:::x}, space :::p, par l {comp trueName:::p:168:p, comp pwd2::l:p:168:p}}, seq l {par l {comp contentLabel::l:p:34:p, comp contentLabel2::l:p:34:p}, space :p:36:p, par l:::p {comp content::::168:x, comp pwd1::::168:x}}}}, seq l {space :p:81:p, comp confirm:::p:69:p, space :p:28:p, comp cancel:::p:69:p}}, space ::68:x}}"
+			"$verticalGroup": "par l {seq l {space :p:23:p, par b {comp label1::b:p:40:p, comp isTeacherLabel::b:p:25:p}, space s:::p, par b {comp accountLabel::b:p:25:p, comp account::b:p::p}, space s:::p, par b {comp userNameLabel2::b:p:25:p, comp userName::b:p::p}, space s:::p, par b {comp trueNameLabel::b:p:25:p, comp trueName::b:p::p}, space u:::p, par b {comp ageLabel::b:p:25:p, comp age::b:p::p}, space u:::p, par b {comp classLabel::b:p:25:p, comp userClass::b:p::p}, space u:::p, par b {comp contentLabel::b:p:25:p, comp content::b:p::p}, space s:::p, par b {comp contentLabel2::b:p:25:p, comp pwd1::b:p::p}, space u:::p, par b {comp contentLabel3::b:p:25:p, comp pwd2::b:p::p}, space s:::p, par b {comp confirm::b:p:47:p, comp cancel::b:p:47:p}, space ::30:x}}"
+		} ) {
+			name: "this"
+			"title": "个人信息"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "accountLabel"
+				"text": "账号"
+				"font": &Font0 new java.awt.Font( "Lucida Grande", 0, 16 )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "个人信息"
+				"font": new java.awt.Font( "Lucida Grande", 0, 28 )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "userNameLabel2"
+				"text": "昵称"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "trueNameLabel"
+				"text": "真实姓名"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "ageLabel"
+				"text": "年龄"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "classLabel"
+				"text": "班级"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "contentLabel"
+				"text": "备注"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "isTeacherLabel"
+				"text": "教师"
+				"font": #Font0
+				"foreground": sfield java.awt.Color blue
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "account"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "userName"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "trueName"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "age"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "userClass"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "content"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "confirm"
+				"text": "保存"
+				"font": &Font1 new java.awt.Font( "Lucida Grande", 0, 16 )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "confirmMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "cancel"
+				"text": "取消"
+				"font": #Font1
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "cancelMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "contentLabel2"
+				"text": "密码"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "contentLabel3"
+				"text": "再次输入"
+				"font": #Font0
+			} )
+			add( new FormComponent( "javax.swing.JPasswordField" ) {
+				name: "pwd1"
+			} )
+			add( new FormComponent( "javax.swing.JPasswordField" ) {
+				name: "pwd2"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 350, 510 )
+		} )
+	}
+}

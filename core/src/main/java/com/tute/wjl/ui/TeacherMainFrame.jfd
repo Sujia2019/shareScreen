@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par t {seq {space :::p, comp panel1:::::x, space :::p, par l {par l {par l {comp myCourse:::p:105:p, comp startCourse::t:p:105:p}, comp addNewCourse::t:p:105:p}, comp updateCourse:::p:105:p, comp deleteCourse::l:p:105:p, comp updateInfo::l:p:105:p, comp myInfo:::p:105:p, comp separator1:::p:105:p}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {seq {comp myCourse:::p:44:p, space :::x, comp startCourse:::p:44:p, space :::p, comp addNewCourse:::p:44:p, space :::p, comp updateCourse:::p:44:p, space :::p, comp deleteCourse:::p:44:p, space s:::p, comp separator1:::p::p, space :p:3:p, comp myInfo:::p:44:p, space :::p, comp updateInfo:::p:44:p}, comp panel1:::::x}, space :p:61:p}}"
+			"$horizontalGroup": "par t {seq {space :::p, comp panel1:::::x, space :::p, par l {par l {par l {comp myCourse:::p:105:p, comp startCourse::t:p:105:p}, comp addNewCourse::t:p:105:p}, comp updateCourse:::p:105:p, comp deleteCourse::l:p:105:p, comp exit::l:p:105:p, comp myInfo:::p:105:p, comp separator1:::p:105:p}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {seq {comp myCourse:::p:44:p, space :::x, comp startCourse:::p:44:p, space :::p, comp addNewCourse:::p:44:p, space :::p, comp updateCourse:::p:44:p, space :::p, comp deleteCourse:::p:44:p, space s:::p, comp separator1:::p::p, space :p:3:p, comp myInfo:::p:44:p, space :::p, comp exit:::p:44:p}, comp panel1:::::x}, space :p:61:p}}"
 		} ) {
 			name: "this"
 			"visible": true
@@ -35,8 +35,9 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "showMyInfo", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "updateInfo"
-				"text": "修改信息"
+				name: "exit"
+				"text": "退出登陆"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "updateInfoMouseClicked", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 				"$horizontalGroup": "par l {seq l {space :p:27:p, par l {seq {comp searchField:::p:175:p, space :::p, comp searchButton:::p:42:p}, comp resScoll:::p:223:p}, space s:::p, par l:::p {comp label1:::::x, comp label2:::::x, comp label3:::::x, comp label4:::::x, comp label5:::p::p, comp label6::l:p::p}, space ::16:x, par l:::p {comp courseTime::t::178:x, comp courseTeacher::t::178:x, comp courseClass::t::178:x, comp courseHours::t::178:x, comp scrollPane1::t::178:x, comp courseName::::178:x}, space :::p}}"

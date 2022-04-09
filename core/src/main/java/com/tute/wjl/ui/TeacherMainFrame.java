@@ -28,11 +28,10 @@ public class TeacherMainFrame extends JFrame {
     }
 
     private void showMyInfo(MouseEvent e) {
-        // TODO add your code here
+        new MyInfoFrame(dataContext).setVisible(true);
     }
 
     private void startCourseMouseClicked(MouseEvent e) {
-        // TODO add your code here
         // 开始上课
         Message message = dataContext.initMessage(Constants.CREATE);
         // toId改为选中的课程-班级
@@ -113,6 +112,11 @@ public class TeacherMainFrame extends JFrame {
         course.setCourseClass(courseClass.getText());
     }
 
+    private void updateInfoMouseClicked(MouseEvent e) {
+        new LoginFrame(dataContext).setVisible(true);
+        this.setVisible(false);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - sujia
@@ -121,7 +125,7 @@ public class TeacherMainFrame extends JFrame {
         startCourse = new JButton();
         addNewCourse = new JButton();
         myInfo = new JButton();
-        updateInfo = new JButton();
+        exit = new JButton();
         panel1 = new JPanel();
         searchField = new JTextField();
         searchButton = new JButton();
@@ -184,18 +188,23 @@ public class TeacherMainFrame extends JFrame {
             }
         });
 
-        //---- updateInfo ----
-        updateInfo.setText("\u4fee\u6539\u4fe1\u606f");
+        //---- exit ----
+        exit.setText("\u9000\u51fa\u767b\u9646");
+        exit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateInfoMouseClicked(e);
+            }
+        });
 
         //======== panel1 ========
         {
-            panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new
-            javax . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmDes\u0069gner \u0045valua\u0074ion" , javax
-            . swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java
-            . awt .Font ( "D\u0069alog", java .awt . Font. BOLD ,12 ) ,java . awt
-            . Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .
-            PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062order" .
-            equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing.
+            border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER
+            , javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font
+            .BOLD ,12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (
+            new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r"
+            .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
 
             //---- searchButton ----
             searchButton.setText("\u67e5\u8be2");
@@ -357,7 +366,7 @@ public class TeacherMainFrame extends JFrame {
                             .addComponent(addNewCourse, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
                         .addComponent(updateCourse, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
                         .addComponent(deleteCourse, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(updateInfo, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(exit, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
                         .addComponent(myInfo, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
                         .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap())
@@ -382,7 +391,7 @@ public class TeacherMainFrame extends JFrame {
                             .addGap(3, 3, 3)
                             .addComponent(myInfo, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(updateInfo, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(exit, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
                         .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGap(61, 61, 61))
         );
@@ -421,14 +430,6 @@ public class TeacherMainFrame extends JFrame {
 
     public void setMyInfo(JButton myInfo) {
         this.myInfo = myInfo;
-    }
-
-    public JButton getUpdateInfo() {
-        return updateInfo;
-    }
-
-    public void setUpdateInfo(JButton updateInfo) {
-        this.updateInfo = updateInfo;
     }
 
     public JTextField getSearchField() {
@@ -526,7 +527,7 @@ public class TeacherMainFrame extends JFrame {
     private JButton startCourse;
     private JButton addNewCourse;
     private JButton myInfo;
-    private JButton updateInfo;
+    private JButton exit;
     private JPanel panel1;
     private JTextField searchField;
     private JButton searchButton;

@@ -29,11 +29,10 @@ public class StudentMainFrame extends JFrame {
     }
 
     private void showMyInfo(MouseEvent e) {
-        // TODO add your code here
+        new MyInfoFrame(dataContext).setVisible(true);
     }
 
     private void joinCourseMouseClicked(MouseEvent e) {
-        // TODO add your code here
         Message message = dataContext.initMessage(Constants.ADD);
         // toId改为选中的课程-班级
         message.setToId(resList.getSelectedValue());
@@ -73,6 +72,11 @@ public class StudentMainFrame extends JFrame {
         }
     }
 
+    private void exitMouseClicked(MouseEvent e) {
+        new LoginFrame(dataContext).setVisible(true);
+        this.setVisible(false);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - sujia
@@ -80,7 +84,7 @@ public class StudentMainFrame extends JFrame {
         separator1 = new JSeparator();
         joinCourse = new JButton();
         myInfo = new JButton();
-        updateInfo = new JButton();
+        exit = new JButton();
         panel1 = new JPanel();
         searchField = new JTextField();
         searchButton = new JButton();
@@ -132,17 +136,24 @@ public class StudentMainFrame extends JFrame {
             }
         });
 
-        //---- updateInfo ----
-        updateInfo.setText("\u4fee\u6539\u4fe1\u606f");
+        //---- exit ----
+        exit.setText("\u9000\u51fa\u767b\u9646");
+        exit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                exitMouseClicked(e);
+            }
+        });
 
         //======== panel1 ========
         {
-            panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border
-            .EmptyBorder(0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border.TitledBorder.CENTER,javax
-            .swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,
-            12),java.awt.Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans
-            .PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.
-            getPropertyName()))throw new RuntimeException();}});
+            panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax
+            . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion" , javax. swing
+            .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .
+            Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt. Color .red
+            ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override
+            public void propertyChange (java . beans. PropertyChangeEvent e) { if( "bord\u0065r" .equals ( e. getPropertyName (
+            ) ) )throw new RuntimeException( ) ;} } );
 
             //---- searchButton ----
             searchButton.setText("\u67e5\u8be2");
@@ -304,7 +315,7 @@ public class StudentMainFrame extends JFrame {
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                     .addComponent(joinCourse, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
                                     .addComponent(myCourse, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(updateInfo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(exit, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
                             .addComponent(myInfo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
                         .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap())
@@ -324,7 +335,7 @@ public class StudentMainFrame extends JFrame {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(myInfo, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(updateInfo, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(exit, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
                         .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGap(61, 61, 61))
         );
@@ -340,7 +351,7 @@ public class StudentMainFrame extends JFrame {
     private JSeparator separator1;
     private JButton joinCourse;
     private JButton myInfo;
-    private JButton updateInfo;
+    private JButton exit;
     private JPanel panel1;
     private JTextField searchField;
     private JButton searchButton;
