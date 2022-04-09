@@ -2,6 +2,7 @@ package com.tute.wjl.net;
 
 import com.tute.wjl.context.DataContext;
 import com.tute.wjl.context.FrameContext;
+import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
 import com.tute.wjl.ui.ErrorTips;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
@@ -70,6 +72,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                     break;
                 // 退出群组
                 case Constants.QUIT:
+                    quitGroup(message);
                     break;
                 // 结束上课
                 case Constants.END:
@@ -79,6 +82,9 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                 // 用户业务
                 case Constants.USER:
                     doUser(message,ctx);
+                    break;
+                case Constants.COURSE:
+                    doCourse(message);
                     break;
                 case Constants.ERROR:
                     errorMsg(message);
@@ -107,7 +113,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
             return;
         }
         user = (User) message.getContent();
-
         getLoginInfo(message,user);
     }
 
@@ -119,7 +124,9 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
             dataContext.setUser(user);
             // 关闭登陆窗口
             context.getLoginFrame().dispose();
+            dataContext.setTeacher(user.isTeacher());
             if(user.isTeacher()){
+                dataContext.setTeacherId(user.getUserAccount());
                 context.getTeacherFrame().setVisible(true);
             }else{
                 // 学生不能请求他人共享屏幕等
@@ -146,14 +153,22 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
     // 进入课堂
     private void joinGroup(Message message){
+        setUserList(message);
         context.getShareFrame().setVisible(true);
         dataContext.setShareGroupName(message.getToId());
     }
+    private void setUserList(Message message){
+        List res = (List) message.getContent();
+        String []array = new String[res.size()];
+        for(int i=0;i<res.size();i++){
+            array[i] = res.get(i).toString();
+        }
+        context.getUserList().setListData(array);
+    }
 
-    // 加入课程成功，在列表中显示自己
-    private void addSuccess(){
-//        context.getUserList().getModel().
-//        context.getUserList().setListData();
+    // 有人退出课堂
+    private void quitGroup(Message message){
+        setUserList(message);
     }
 
     private void getPicture(Message message){
@@ -195,6 +210,46 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
         String content = context.getLittleChatArea().getText()+"\n\n 来自【"+message.getFromName()+"】私聊消息:\n  "+message.getContent();
         context.getBigChatArea().setText(content);
         context.getLittleChatArea().setText(content);
+    }
+
+    private void doCourse(Message message){
+        switch (message.getToId()){
+            case Constants.COURSE_SEARCH_SUCCESS:
+            case Constants.COURSE_CLASS_SUCCESS:
+            case Constants.COURSE_TEACHER_SUCCESS:
+                updateJList(message);
+                break;
+            case Constants.COURSE_DELETE_SUCCESS:
+                new ErrorTips("成功！","成功删除课程【"+message.getContent()+"】");
+                break;
+            case Constants.COURSE_UPDATE_SUCCESS:
+                new ErrorTips("成功！","成功修改课程【"+message.getContent()+"】");
+                break;
+            case Constants.COURSE_NEW_SUCCESS:
+                new ErrorTips("成功！","成功创建新课程【"+message.getContent()+"】");
+                break;
+            default:
+                System.out.println(message);
+        }
+    }
+
+    private void updateJList(Message message){
+        List res = (List) message.getContent();
+        dataContext.setData(res);
+        String []array = new String[res.size()];
+        for(int i=0;i<res.size();i++){
+            if(res.get(i) instanceof Course){
+                String name = ((Course) res.get(i)).getCourseName()+"-"+((Course) res.get(i)).getCourseClass();
+                array[i]=name;
+            }
+        }
+        // 老师
+        if(dataContext.isTeacher()){
+            context.getResList().setListData(array);
+
+        }else{
+            context.getResList2().setListData(array);
+        }
     }
 
 }

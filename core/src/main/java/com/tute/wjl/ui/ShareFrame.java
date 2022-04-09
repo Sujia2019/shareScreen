@@ -36,17 +36,15 @@ public class ShareFrame extends JFrame {
     }
 
     private void startShareScreen(MouseEvent e) {
-        if(dataContext.getUser().isTeacher()){
+        if(dataContext.getUser().isTeacher()||DataContext.isReceive){
             DataContext.needStop = false;
             boardController.setVisible(true);
             system.setVisible(false);
             new Thread(new ShareScreen()).start();
         }
-        // TODO add your code here
     }
 
     private void sendMessage(String type,String msg,String toId) {
-        // TODO add your code here
         Message message = dataContext.initMessage(type);
         message.setContent(msg);
         message.setToId(toId);
@@ -55,7 +53,6 @@ public class ShareFrame extends JFrame {
     }
 
     private void sendToOneMouseClicked(MouseEvent e) {
-        // TODO add your code here
         String toUser = userList.getSelectedValue();
         String content = inputArea.getText();
         String[] array = toUser.split("\\(");
@@ -84,9 +81,11 @@ public class ShareFrame extends JFrame {
     private void requestButtonMouseClicked(MouseEvent e) {
         // TODO add your code here
         String toUser = userList.getSelectedValue();
+        String[] array = toUser.split("\\(");
+        String res = array[1].substring(0,array[1].length()-1);
         if(!StringUtil.isNullOrEmpty(toUser)){
             Message message = dataContext.initMessage(Constants.SHARE);
-            message.setToId(toUser);
+            message.setToId(res);
             ClientApplication.send(message);
         }else{
             new ErrorTips("未指定学生");
@@ -95,16 +94,17 @@ public class ShareFrame extends JFrame {
 
     private void closeButtonMouseClicked(MouseEvent e) {
         DataContext.needStop = true;
+        DataContext.isReceive = false;
         screen.setText("您已停止共享屏幕");
     }
 
     private void endButtonMouseClicked(MouseEvent e) {
         if(dataContext.getUser().isTeacher()){
             sendMessage(Constants.END,"结束课程",dataContext.getShareGroupName());
-
         }else{
             sendMessage(Constants.QUIT,"退出课程",dataContext.getShareGroupName());
         }
+        system.dispose();
     }
 
     class ShareScreen implements Runnable{
@@ -161,11 +161,13 @@ public class ShareFrame extends JFrame {
             {
                 chatPanel.setBackground(Color.white);
                 chatPanel.setForeground(new Color(102, 102, 102));
-                chatPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-                0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
-                . BOTTOM, new java .awt .Font ("D\u0069alog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
-                red) ,chatPanel. getBorder( )) ); chatPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-                beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+                chatPanel.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax
+                .swing.border.EmptyBorder(0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing
+                .border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java.awt.
+                Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt.Color.red
+                ),chatPanel. getBorder()));chatPanel. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override
+                public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062ord\u0065r".equals(e.getPropertyName(
+                )))throw new RuntimeException();}});
 
                 //======== userNames ========
                 {
@@ -208,7 +210,7 @@ public class ShareFrame extends JFrame {
                         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                         userList.setModel(new AbstractListModel<String>() {
                             String[] values = {
-                                "student(student)"
+                                "name(id)"
                             };
                             @Override
                             public int getSize() { return values.length; }

@@ -47,7 +47,6 @@ public class ClientApplication {
         context.setLoginFrame(loginFrame);
         context.setShareFrame(shareFrame.getSystem());
         context.setLabel(shareFrame.getScreen());
-        context.setUserList(shareFrame.getUserList());
         context.setStudentFrame(studentFrame);
         context.setTeacherFrame(teacherFrame);
         context.setEndButton(shareFrame.getEndButton());
@@ -57,6 +56,10 @@ public class ClientApplication {
         context.setBoardController(controller);
         context.setBigChatArea(shareFrame.getChatLog());
         context.setLittleChatArea(littleChatPanel.getChatLogArea());
+
+        context.setResList(teacherFrame.getResList());
+        context.setResList2(studentFrame.getResList());
+        context.setUserList(shareFrame.getUserList());
 
 
 

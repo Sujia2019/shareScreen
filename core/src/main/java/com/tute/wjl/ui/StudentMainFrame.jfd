@@ -14,6 +14,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "myCourse"
 				"text": "我的课程"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "myCourseMouseClicked", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JSeparator" ) {
 				name: "separator1"
@@ -33,8 +34,8 @@ new FormModel {
 				"text": "修改信息"
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {space :p:27:p, par l {seq {comp searchField:::p:175:p, space :::p, comp searchButton:::p:42:p}, comp resScoll:::p:223:p}, space s:::p, par l:::p {comp label1:::::x, comp label2:::::x, comp label3:::::x, comp label4:::::x, comp label5:::p::p, comp label6::l:p::p}, space :::p, par l {comp textField1:::::x, seq t {space :0:0:x, par l:::p {comp textField4::t::178:x, comp textField2::t::178:x, comp textField3::t::178:x, comp textField5::t::178:x, comp scrollPane1::t::178:x}}}, space :::p}}"
-				"$verticalGroup": "par l {seq {par l:::p {seq l {space :p:60:p, par t {comp label1:::p:26:p, comp textField1:::p::p}, space :::p, par b {comp label2::b:p:26:p, comp textField2::b:p::p}, space :::p, par b {comp label3::b:p:26:p, comp textField3::b:p::p}, space :::p, par b {comp label4::b:p:26:p, comp textField4::b:p::p}, space :::p, par b {comp label5::b:p:26:p, comp textField5::b:p::p}, space :::p, par l {comp label6:::p:26:p, comp scrollPane1:::::x}}, seq l {space :p:17:p, par b {comp searchField::b:p:37:p, comp searchButton::b:p:37:p}, space :::p, comp resScoll:::p:268:p}}, space :::x}}"
+				"$horizontalGroup": "par l {seq l {space :p:27:p, par l {seq {comp searchField:::p:175:p, space :::p, comp searchButton:::p:42:p}, comp resScoll:::p:223:p}, space s:::p, par l:::p {comp label1:::::x, comp label2:::::x, comp label3:::::x, comp label4:::::x, comp label5:::p::p, comp label6::l:p::p}, space :::p, par l {comp courseName:::::x, seq t {space :0:0:x, par l:::p {comp courseTime::t::178:x, comp courseTeacher::t::178:x, comp courseClass::t::178:x, comp courseHours::t::178:x, comp scrollPane1::t::178:x}}}, space :::p}}"
+				"$verticalGroup": "par l {seq {par l:::p {seq l {space :p:60:p, par t {comp label1:::p:26:p, comp courseName:::p::p}, space :::p, par b {comp label2::b:p:26:p, comp courseTeacher::b:p::p}, space :::p, par b {comp label3::b:p:26:p, comp courseClass::b:p::p}, space :::p, par b {comp label4::b:p:26:p, comp courseTime::b:p::p}, space :::p, par b {comp label5::b:p:26:p, comp courseHours::b:p::p}, space :::p, par l {comp label6:::p:26:p, comp scrollPane1:::::x}}, seq l {space :p:17:p, par b {comp searchField::b:p:37:p, comp searchButton::b:p:37:p}, space :::p, comp resScoll:::p:268:p}}, space :::x}}"
 			} ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JTextField" ) {
@@ -43,14 +44,16 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "searchButton"
 					"text": "查询"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "searchButtonMouseClicked", true ) )
 				} )
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "resScoll"
 					add( new FormComponent( "javax.swing.JList" ) {
 						name: "resList"
 						"model": new javax.swing.DefaultListModel {
-							addElement( "高等数学-网络1801" )
+							addElement( "课程名-班级" )
 						}
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "resListMouseClicked", true ) )
 					} )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -78,30 +81,30 @@ new FormModel {
 					"text": "课程介绍"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField1"
+					name: "courseName"
 					"enabled": false
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField2"
+					name: "courseTeacher"
 					"enabled": false
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField3"
+					name: "courseClass"
 					"enabled": false
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField4"
+					name: "courseTime"
 					"enabled": false
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField5"
+					name: "courseHours"
 					"enabled": false
 				} )
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "scrollPane1"
 					"enabled": false
 					add( new FormComponent( "javax.swing.JTextArea" ) {
-						name: "textArea1"
+						name: "courseContent"
 						"enabled": false
 					} )
 				} )

@@ -4,10 +4,13 @@
 
 package com.tute.wjl.ui;
 
+import com.mysql.jdbc.StringUtils;
 import com.tute.wjl.ClientApplication;
 import com.tute.wjl.context.DataContext;
+import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.utils.Constants;
+import lombok.Data;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,6 +20,7 @@ import javax.swing.GroupLayout;
 /**
  * @author sujia
  */
+@Data
 public class StudentMainFrame extends JFrame {
     private DataContext dataContext;
     public StudentMainFrame(DataContext dataContext) {
@@ -35,6 +39,38 @@ public class StudentMainFrame extends JFrame {
         message.setToId(resList.getSelectedValue());
         ClientApplication.send(message);
 
+    }
+
+    private void searchButtonMouseClicked(MouseEvent e) {
+        String searchContent = searchField.getText();
+        if(StringUtils.isNullOrEmpty(searchContent)){
+            new ErrorTips("搜索内容不可为空");
+        }else{
+            Message message = dataContext.initMessage(Constants.COURSE);
+            message.setContent(searchContent);
+            message.setToId(Constants.COURSE_SEARCH);
+            ClientApplication.send(message);
+        }
+    }
+
+    private void myCourseMouseClicked(MouseEvent e) {
+        Message message = dataContext.initMessage(Constants.COURSE);
+        message.setContent(dataContext.getUser().getUserClass());
+        message.setToId(Constants.COURSE_CLASS);
+        ClientApplication.send(message);
+    }
+
+    private void resListMouseClicked(MouseEvent e) {
+        int index = resList.getSelectedIndex();
+        Object obj = dataContext.getData().get(index);
+        if(obj instanceof Course){
+            courseClass.setText(((Course) obj).getCourseClass());
+            courseContent.setText(((Course) obj).getCourseContent());
+            courseHours.setText(""+((Course) obj).getCourseHours());
+            courseName.setText(((Course) obj).getCourseName());
+            courseTeacher.setText(((Course) obj).getCourseTeacher());
+            courseTime.setText(((Course) obj).getCourseTime());
+        }
     }
 
     private void initComponents() {
@@ -56,13 +92,13 @@ public class StudentMainFrame extends JFrame {
         label4 = new JLabel();
         label5 = new JLabel();
         label6 = new JLabel();
-        textField1 = new JTextField();
-        textField2 = new JTextField();
-        textField3 = new JTextField();
-        textField4 = new JTextField();
-        textField5 = new JTextField();
+        courseName = new JTextField();
+        courseTeacher = new JTextField();
+        courseClass = new JTextField();
+        courseTime = new JTextField();
+        courseHours = new JTextField();
         scrollPane1 = new JScrollPane();
-        textArea1 = new JTextArea();
+        courseContent = new JTextArea();
 
         //======== this ========
         setVisible(true);
@@ -71,6 +107,12 @@ public class StudentMainFrame extends JFrame {
 
         //---- myCourse ----
         myCourse.setText("\u6211\u7684\u8bfe\u7a0b");
+        myCourse.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                myCourseMouseClicked(e);
+            }
+        });
 
         //---- joinCourse ----
         joinCourse.setText("\u52a0\u5165\u8bfe\u7a0b");
@@ -95,15 +137,21 @@ public class StudentMainFrame extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border
-            . EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax
-            . swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,
-            12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans
-            . PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .
-            getPropertyName () )) throw new RuntimeException( ); }} );
+            panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border
+            .EmptyBorder(0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border.TitledBorder.CENTER,javax
+            .swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,
+            12),java.awt.Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans
+            .PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.
+            getPropertyName()))throw new RuntimeException();}});
 
             //---- searchButton ----
             searchButton.setText("\u67e5\u8be2");
+            searchButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    searchButtonMouseClicked(e);
+                }
+            });
 
             //======== resScoll ========
             {
@@ -111,12 +159,18 @@ public class StudentMainFrame extends JFrame {
                 //---- resList ----
                 resList.setModel(new AbstractListModel<String>() {
                     String[] values = {
-                        "\u9ad8\u7b49\u6570\u5b66-\u7f51\u7edc1801"
+                        "\u8bfe\u7a0b\u540d-\u73ed\u7ea7"
                     };
                     @Override
                     public int getSize() { return values.length; }
                     @Override
                     public String getElementAt(int i) { return values[i]; }
+                });
+                resList.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        resListMouseClicked(e);
+                    }
                 });
                 resScoll.setViewportView(resList);
             }
@@ -139,28 +193,28 @@ public class StudentMainFrame extends JFrame {
             //---- label6 ----
             label6.setText("\u8bfe\u7a0b\u4ecb\u7ecd");
 
-            //---- textField1 ----
-            textField1.setEnabled(false);
+            //---- courseName ----
+            courseName.setEnabled(false);
 
-            //---- textField2 ----
-            textField2.setEnabled(false);
+            //---- courseTeacher ----
+            courseTeacher.setEnabled(false);
 
-            //---- textField3 ----
-            textField3.setEnabled(false);
+            //---- courseClass ----
+            courseClass.setEnabled(false);
 
-            //---- textField4 ----
-            textField4.setEnabled(false);
+            //---- courseTime ----
+            courseTime.setEnabled(false);
 
-            //---- textField5 ----
-            textField5.setEnabled(false);
+            //---- courseHours ----
+            courseHours.setEnabled(false);
 
             //======== scrollPane1 ========
             {
                 scrollPane1.setEnabled(false);
 
-                //---- textArea1 ----
-                textArea1.setEnabled(false);
-                scrollPane1.setViewportView(textArea1);
+                //---- courseContent ----
+                courseContent.setEnabled(false);
+                scrollPane1.setViewportView(courseContent);
             }
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
@@ -185,14 +239,14 @@ public class StudentMainFrame extends JFrame {
                             .addComponent(label6))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel1Layout.createParallelGroup()
-                            .addComponent(textField1)
+                            .addComponent(courseName)
                             .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(textField4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                                    .addComponent(textField2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                                    .addComponent(textField3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                                    .addComponent(textField5, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                                    .addComponent(courseTime, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                                    .addComponent(courseTeacher, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                                    .addComponent(courseClass, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                                    .addComponent(courseHours, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                                     .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))))
                         .addContainerGap())
             );
@@ -204,23 +258,23 @@ public class StudentMainFrame extends JFrame {
                                 .addGap(60, 60, 60)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                     .addComponent(label1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(courseName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                     .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(courseTeacher, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                     .addComponent(label3, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(courseClass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                     .addComponent(label4, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(courseTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                     .addComponent(label5, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textField5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(courseHours, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addComponent(label6, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
@@ -298,13 +352,13 @@ public class StudentMainFrame extends JFrame {
     private JLabel label4;
     private JLabel label5;
     private JLabel label6;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JTextField textField5;
+    private JTextField courseName;
+    private JTextField courseTeacher;
+    private JTextField courseClass;
+    private JTextField courseTime;
+    private JTextField courseHours;
     private JScrollPane scrollPane1;
-    private JTextArea textArea1;
+    private JTextArea courseContent;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 }

@@ -2,6 +2,7 @@ package com.tute.wjl.service;
 
 import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
+import com.tute.wjl.entity.User;
 import com.tute.wjl.utils.Constants;
 import com.tute.wjl.utils.MybatisConf;
 import org.apache.ibatis.session.SqlSession;
@@ -35,6 +36,7 @@ public class CourseService {
 
     public void getCourseByTeacher(Message message){
         message.setToId(Constants.COURSE_TEACHER_SUCCESS);
+        System.out.println(message);
         List<Course> res = session.selectList("getByTeacher",message.getContent());
         message.setContent(res);
     }

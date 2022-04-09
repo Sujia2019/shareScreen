@@ -12,7 +12,6 @@ public class FrameContext {
     private ErrorTips error;
     private JFrame shareFrame;
     private JFrame loginFrame;
-    private JList userList;
     private JFrame teacherFrame;
     private JFrame studentFrame;
     private JButton shareButton;
@@ -22,4 +21,7 @@ public class FrameContext {
     private JFrame boardController;
     private JTextArea bigChatArea;
     private JTextArea littleChatArea;
+    private JList<String> resList;
+    private JList<String> resList2;
+    private JList<String> userList;
 }

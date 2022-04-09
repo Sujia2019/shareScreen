@@ -77,6 +77,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                     break;
                 case Constants.COURSE:
                     doCourse(message,ctx);
+                    break;
                 default:
                     LOGGER.info("message type is not defined");
 
@@ -103,7 +104,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
+        // 处于活动状态 已连接上
         LOGGER.info(">>>>>>>channel active"+ctx);
     }
 
@@ -117,6 +119,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
         if(message.getContent() instanceof User){
             switch (target) {
                 case Constants.LOGIN:
+                    // 登陆
                     userService.doLogin(message, ctx);
                     break;
                 case Constants.REGISTER:
@@ -129,30 +132,33 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
         }
     }
 
-    private void doCourse(Message message,ChannelHandlerContext ctx){
-        if(message.getContent() instanceof Course){
-            switch (message.getToId()){
-                case Constants.COURSE_CLASS:
-                    courseService.getCourseByClass(message);
-                    break;
-                case Constants.COURSE_DELETE:
-                    courseService.delete(message);
-                    break;
-                case Constants.COURSE_SEARCH:
-                    courseService.getCourseByName(message);
-                    break;
-                case Constants.COURSE_NEW:
-                    courseService.insert(message);
-                    break;
-                case Constants.COURSE_TEACHER:
-                    courseService.getCourseByTeacher(message);
-                case Constants.COURSE_UPDATE:
-                    courseService.update(message);
-                default:
-                    break;
-            }
-            ctx.writeAndFlush(message);
+    private void doCourse(Message message, ChannelHandlerContext ctx) {
+
+        switch (message.getToId()) {
+            case Constants.COURSE_CLASS:
+                courseService.getCourseByClass(message);
+                break;
+            case Constants.COURSE_DELETE:
+                courseService.delete(message);
+                break;
+            case Constants.COURSE_SEARCH:
+                courseService.getCourseByName(message);
+                break;
+            case Constants.COURSE_NEW:
+                courseService.insert(message);
+                break;
+            case Constants.COURSE_TEACHER:
+                courseService.getCourseByTeacher(message);
+                break;
+            case Constants.COURSE_UPDATE:
+                courseService.update(message);
+                break;
+            default:
+                break;
         }
+        System.out.println(message);
+        ctx.writeAndFlush(message);
+
     }
 
 }

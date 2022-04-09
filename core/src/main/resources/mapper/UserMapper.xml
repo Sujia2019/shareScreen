@@ -27,6 +27,7 @@
         <id property="id" column="id"/>
         <result property="userAccount" column="user_account"/>
         <result property="userName" column="user_name"/>
+        <result property="userClass" column="class"/>
         <result property="trueName" column="true_name"/>
         <result property="userPwd" column="user_pwd"/>
         <result property="age" column="age"/>

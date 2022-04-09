@@ -4,10 +4,13 @@
 
 package com.tute.wjl.ui;
 
+import com.mysql.jdbc.StringUtils;
 import com.tute.wjl.ClientApplication;
 import com.tute.wjl.context.DataContext;
+import com.tute.wjl.entity.Course;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.utils.Constants;
+import lombok.Data;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -36,6 +39,78 @@ public class TeacherMainFrame extends JFrame {
         message.setToId(resList.getSelectedValue());
         ClientApplication.send(message);
 
+    }
+
+    private void searchButtonMouseClicked(MouseEvent e) {
+        String searchContent = searchField.getText();
+        if(StringUtils.isNullOrEmpty(searchContent)){
+            new ErrorTips("搜索内容不可为空");
+        }else{
+            Message message = dataContext.initMessage(Constants.COURSE);
+            message.setContent(searchContent);
+            message.setToId(Constants.COURSE_SEARCH);
+            ClientApplication.send(message);
+        }
+    }
+
+    private void myCourseMouseClicked(MouseEvent e) {
+        Message message = dataContext.initMessage(Constants.COURSE);
+        message.setContent(dataContext.getUser().getUserAccount());
+        message.setToId(Constants.COURSE_TEACHER);
+        ClientApplication.send(message);
+    }
+
+    private void resListMouseClicked(MouseEvent e) {
+        int index = resList.getSelectedIndex();
+        Object obj = dataContext.getData().get(index);
+        if(obj instanceof Course){
+            courseClass.setText(((Course) obj).getCourseClass());
+            courseContent.setText(((Course) obj).getCourseContent());
+            courseHours.setText(""+((Course) obj).getCourseHours());
+            courseName.setText(((Course) obj).getCourseName());
+            courseTeacher.setText(((Course) obj).getCourseTeacher());
+            courseTime.setText(((Course) obj).getCourseTime());
+        }
+    }
+
+    private void deleteCourseMouseClicked(MouseEvent e) {
+        int index = resList.getSelectedIndex();
+        Object obj = dataContext.getData().get(index);
+        if(obj instanceof Course){
+            int id = ((Course) obj).getId();
+            Message message = dataContext.initMessage(Constants.COURSE);
+            message.setContent(id);
+            message.setToId(Constants.COURSE_DELETE);
+            ClientApplication.send(message);
+        }
+    }
+
+    private void addNewCourseMouseClicked(MouseEvent e) {
+        Course course = new Course();
+        initCourse(course);
+        Message message = dataContext.initMessage(Constants.COURSE);
+        message.setContent(course);
+        message.setToId(Constants.COURSE_NEW);
+        ClientApplication.send(message);
+    }
+
+    private void updateCourseMouseClicked(MouseEvent e) {
+        int index = resList.getSelectedIndex();
+        Course course = (Course) dataContext.getData().get(index);
+        initCourse(course);
+        Message message = dataContext.initMessage(Constants.COURSE);
+        message.setContent(course);
+        message.setToId(Constants.COURSE_UPDATE);
+        ClientApplication.send(message);
+    }
+
+    private void initCourse(Course course) {
+        course.setCourseName(courseName.getText());
+        course.setCourseTime(courseTime.getText());
+        course.setCourseContent(courseContent.getText());
+        course.setCourseHours(Integer.parseInt(courseHours.getText()));
+        course.setCourseTeacher(dataContext.getUser().getTrueName());
+        course.setCourseClass(courseClass.getText());
     }
 
     private void initComponents() {
@@ -75,6 +150,12 @@ public class TeacherMainFrame extends JFrame {
 
         //---- myCourse ----
         myCourse.setText("\u6211\u7684\u8bfe\u7a0b");
+        myCourse.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                myCourseMouseClicked(e);
+            }
+        });
 
         //---- startCourse ----
         startCourse.setText("\u5f00\u59cb\u4e0a\u8bfe");
@@ -87,6 +168,12 @@ public class TeacherMainFrame extends JFrame {
 
         //---- addNewCourse ----
         addNewCourse.setText("\u6dfb\u52a0\u8bfe\u7a0b");
+        addNewCourse.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addNewCourseMouseClicked(e);
+            }
+        });
 
         //---- myInfo ----
         myInfo.setText("\u6211\u7684\u4fe1\u606f");
@@ -102,16 +189,22 @@ public class TeacherMainFrame extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new
-            javax. swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax
-            . swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java
-            .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
-            . Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans.
-            PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .
-            equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+            panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new
+            javax . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmDes\u0069gner \u0045valua\u0074ion" , javax
+            . swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java
+            . awt .Font ( "D\u0069alog", java .awt . Font. BOLD ,12 ) ,java . awt
+            . Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .
+            PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062order" .
+            equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
 
             //---- searchButton ----
             searchButton.setText("\u67e5\u8be2");
+            searchButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    searchButtonMouseClicked(e);
+                }
+            });
 
             //======== resScoll ========
             {
@@ -119,7 +212,7 @@ public class TeacherMainFrame extends JFrame {
                 //---- resList ----
                 resList.setModel(new AbstractListModel<String>() {
                     String[] values = {
-                        "\u9ad8\u7b49\u6570\u5b66-\u7f51\u7edc1801"
+                        "\u8bfe\u7a0b\u540d-\u73ed\u7ea7"
                     };
                     @Override
                     public int getSize() { return values.length; }
@@ -127,6 +220,12 @@ public class TeacherMainFrame extends JFrame {
                     public String getElementAt(int i) { return values[i]; }
                 });
                 resList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                resList.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        resListMouseClicked(e);
+                    }
+                });
                 resScoll.setViewportView(resList);
             }
 
@@ -148,27 +247,9 @@ public class TeacherMainFrame extends JFrame {
             //---- label6 ----
             label6.setText("\u8bfe\u7a0b\u4ecb\u7ecd");
 
-            //---- courseName ----
-            courseName.setEnabled(false);
-
-            //---- courseTeacher ----
-            courseTeacher.setEnabled(false);
-
-            //---- courseClass ----
-            courseClass.setEnabled(false);
-
-            //---- courseTime ----
-            courseTime.setEnabled(false);
-
-            //---- courseHours ----
-            courseHours.setEnabled(false);
-
             //======== scrollPane1 ========
             {
                 scrollPane1.setEnabled(false);
-
-                //---- courseContent ----
-                courseContent.setEnabled(false);
                 scrollPane1.setViewportView(courseContent);
             }
 
@@ -244,9 +325,21 @@ public class TeacherMainFrame extends JFrame {
 
         //---- updateCourse ----
         updateCourse.setText("\u7f16\u8f91\u8bfe\u7a0b");
+        updateCourse.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateCourseMouseClicked(e);
+            }
+        });
 
         //---- deleteCourse ----
         deleteCourse.setText("\u5220\u9664\u8bfe\u7a0b");
+        deleteCourse.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                deleteCourseMouseClicked(e);
+            }
+        });
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -296,6 +389,134 @@ public class TeacherMainFrame extends JFrame {
         setSize(645, 415);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    public JButton getMyCourse() {
+        return myCourse;
+    }
+
+    public void setMyCourse(JButton myCourse) {
+        this.myCourse = myCourse;
+    }
+
+    public JButton getStartCourse() {
+        return startCourse;
+    }
+
+    public void setStartCourse(JButton startCourse) {
+        this.startCourse = startCourse;
+    }
+
+    public JButton getAddNewCourse() {
+        return addNewCourse;
+    }
+
+    public void setAddNewCourse(JButton addNewCourse) {
+        this.addNewCourse = addNewCourse;
+    }
+
+    public JButton getMyInfo() {
+        return myInfo;
+    }
+
+    public void setMyInfo(JButton myInfo) {
+        this.myInfo = myInfo;
+    }
+
+    public JButton getUpdateInfo() {
+        return updateInfo;
+    }
+
+    public void setUpdateInfo(JButton updateInfo) {
+        this.updateInfo = updateInfo;
+    }
+
+    public JTextField getSearchField() {
+        return searchField;
+    }
+
+    public void setSearchField(JTextField searchField) {
+        this.searchField = searchField;
+    }
+
+    public JButton getSearchButton() {
+        return searchButton;
+    }
+
+    public void setSearchButton(JButton searchButton) {
+        this.searchButton = searchButton;
+    }
+
+    public JList<String> getResList() {
+        return resList;
+    }
+
+    public void setResList(JList<String> resList) {
+        this.resList = resList;
+    }
+
+    public JTextField getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(JTextField courseName) {
+        this.courseName = courseName;
+    }
+
+    public JTextField getCourseTeacher() {
+        return courseTeacher;
+    }
+
+    public void setCourseTeacher(JTextField courseTeacher) {
+        this.courseTeacher = courseTeacher;
+    }
+
+    public JTextField getCourseClass() {
+        return courseClass;
+    }
+
+    public void setCourseClass(JTextField courseClass) {
+        this.courseClass = courseClass;
+    }
+
+    public JTextField getCourseTime() {
+        return courseTime;
+    }
+
+    public void setCourseTime(JTextField courseTime) {
+        this.courseTime = courseTime;
+    }
+
+    public JTextField getCourseHours() {
+        return courseHours;
+    }
+
+    public void setCourseHours(JTextField courseHours) {
+        this.courseHours = courseHours;
+    }
+
+    public JTextArea getCourseContent() {
+        return courseContent;
+    }
+
+    public void setCourseContent(JTextArea courseContent) {
+        this.courseContent = courseContent;
+    }
+
+    public JButton getUpdateCourse() {
+        return updateCourse;
+    }
+
+    public void setUpdateCourse(JButton updateCourse) {
+        this.updateCourse = updateCourse;
+    }
+
+    public JButton getDeleteCourse() {
+        return deleteCourse;
+    }
+
+    public void setDeleteCourse(JButton deleteCourse) {
+        this.deleteCourse = deleteCourse;
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

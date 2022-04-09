@@ -45,7 +45,7 @@ new FormModel {
 							name: "userList"
 							"selectionMode": 0
 							"model": new javax.swing.DefaultListModel {
-								addElement( "student(student)" )
+								addElement( "name(id)" )
 							}
 						} )
 					} )

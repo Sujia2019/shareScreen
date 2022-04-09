@@ -38,6 +38,7 @@ public class UserService {
         user = session.selectOne("login",user);
         if(user!=null){
             loginSuccess(ctx,user,Constants.LOGIN_SUCCESS);
+            message.setContent(user);
         }else{
             Message res = new Message("登陆失败,用户名或密码错误");
             ctx.writeAndFlush(res);
@@ -52,6 +53,7 @@ public class UserService {
         res.setMessageType(Constants.USER);
         res.setToId(type);
         res.setFromId("SERVER");
+        // 发送用户登陆信息
         ctx.writeAndFlush(res);
     }
 

@@ -27,11 +27,11 @@ public class DrawPanel extends JFrame {
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGap(0, 400, Short.MAX_VALUE)
+                .addGap(0, 458, Short.MAX_VALUE)
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGap(0, 300, Short.MAX_VALUE)
+                .addGap(0, 351, Short.MAX_VALUE)
         );
         pack();
         setLocationRelativeTo(getOwner());
