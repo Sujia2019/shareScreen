@@ -41,7 +41,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             switch (message.getMessageType()){
                 // 图片
                 case Constants.PICTURE:
+                case Constants.DRAW:
                 case Constants.VOICE:
+                case Constants.DRAW_OPEN:
                     // 群聊(局部分组)
                 case Constants.ALL:
                     chatService.sendMessageToGroup(message);

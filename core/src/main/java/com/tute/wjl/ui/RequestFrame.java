@@ -36,6 +36,7 @@ public class RequestFrame extends JFrame {
         DataContext.isReceive = true;
         shareButton.setEnabled(true);
         closeButton.setEnabled(true);
+        dispose();
 
     }
 

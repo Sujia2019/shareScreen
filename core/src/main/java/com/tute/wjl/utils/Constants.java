@@ -3,6 +3,9 @@ package com.tute.wjl.utils;
 public class Constants {
 
     public static final String PICTURE = "PICTURE";                      // 发送图片
+    public static final String DRAW = "DRAW";                            // 发送绘图操作
+    public static final String DRAW_OPEN = "DRAW_OPEN";                  // 打开绘图板
+    public static final String DRAW_OPEN_SUCCESS = "DRAW_OPEN_SUCCESS";  // 打开绘图板
     public static final String VOICE = "VOICE";                          // 发送声音
     public static final String ALL = "ALL";                              // 发送全体通知
     public static final String GROUP = "GROUP";                          // 发送群聊

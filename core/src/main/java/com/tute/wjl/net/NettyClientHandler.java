@@ -3,9 +3,11 @@ package com.tute.wjl.net;
 import com.tute.wjl.context.DataContext;
 import com.tute.wjl.context.FrameContext;
 import com.tute.wjl.entity.Course;
+import com.tute.wjl.entity.DrawOption;
 import com.tute.wjl.entity.Message;
 import com.tute.wjl.entity.User;
 import com.tute.wjl.service.VoiceService;
+import com.tute.wjl.ui.DrawPanel;
 import com.tute.wjl.ui.ErrorTips;
 import com.tute.wjl.ui.RequestFrame;
 import com.tute.wjl.utils.Constants;
@@ -44,6 +46,15 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                 case Constants.PICTURE:
                     // 进行图片资源的还原
                     getPicture(message);
+                    break;
+                // 绘图板打开
+                case Constants.DRAW_OPEN:
+                    this.context.setDrawPanel(new DrawPanel(dataContext));
+                    this.context.getDrawPanel().setVisible(true);
+                    break;
+                // 绘图板反显
+                case Constants.DRAW:
+                    draw(message);
                     break;
                 // 群聊(局部分组) 收到群聊消息
                 case Constants.ALL:
@@ -153,7 +164,9 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
     // 开课成功 打开授课页面
     private void createGroupSuccess(Message message){
+        System.out.println("开课成功 打开授课页面");
         context.getShareFrame().setVisible(true);
+        context.getShareFrame().setTitle("在线教学系统 - 【"+dataContext.getUser().getUserName()+"】");
         dataContext.setShareGroupName(message.getToId());
         VoiceService.getInstance().startPlay();
     }
@@ -161,7 +174,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
     // 进入课堂
     private void joinGroup(Message message){
         setUserList(message);
-        context.getShareFrame().setVisible(true);
+        context.getShareFrame().setTitle("在线教学系统 - 【"+dataContext.getUser().getUserName()+"】");
         dataContext.setShareGroupName(message.getToId());
         VoiceService.getInstance().startPlay();
     }
@@ -257,6 +270,19 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
         }else{
             context.getResList2().setListData(array);
+        }
+    }
+
+    private void draw(Message message){
+        System.out.println(message);
+        Container container = context.getDrawPanel().getContentPane();
+        Graphics g = container.getGraphics();
+        DrawOption option = (DrawOption) message.getContent();
+        if(option.getColor()!=null){
+            g.setColor(option.getColor());
+            g.drawLine(option.getOx(),option.getOy(),option.getX(),option.getY());
+        }else{
+            g.clearRect(option.getOx(),option.getOy(),10,10);
         }
     }
 

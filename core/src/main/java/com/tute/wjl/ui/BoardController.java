@@ -5,7 +5,11 @@
 package com.tute.wjl.ui;
 
 import java.awt.event.*;
+
+import com.tute.wjl.ClientApplication;
 import com.tute.wjl.context.DataContext;
+import com.tute.wjl.entity.Message;
+import com.tute.wjl.utils.Constants;
 
 import java.awt.*;
 import javax.swing.*;
@@ -30,6 +34,13 @@ public class BoardController extends JFrame {
 
     private void showChatMouseClicked(MouseEvent e) {
         littleChatPanel.setVisible(true);
+    }
+
+    private void drawPanelMouseClicked(MouseEvent e) {
+        Message message = dataContext.initMessage(Constants.DRAW_OPEN);
+        message.setToId(dataContext.getShareGroupName());
+        ClientApplication.send(message);
+//        new DrawPanel(dataContext).setVisible(true);
     }
 
     private void initComponents() {
@@ -62,7 +73,13 @@ public class BoardController extends JFrame {
         });
 
         //---- drawPanel ----
-        drawPanel.setText("\u7ed8\u753b\u677f");
+        drawPanel.setText("\u5171\u4eab\u753b\u677f");
+        drawPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                drawPanelMouseClicked(e);
+            }
+        });
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);

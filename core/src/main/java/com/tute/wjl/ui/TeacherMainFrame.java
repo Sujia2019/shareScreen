@@ -25,6 +25,7 @@ public class TeacherMainFrame extends JFrame {
     public TeacherMainFrame(DataContext dataContext) {
         this.dataContext = dataContext;
         initComponents();
+        this.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
     }
 
     private void showMyInfo(MouseEvent e) {
@@ -108,7 +109,7 @@ public class TeacherMainFrame extends JFrame {
         course.setCourseTime(courseTime.getText());
         course.setCourseContent(courseContent.getText());
         course.setCourseHours(Integer.parseInt(courseHours.getText()));
-        course.setCourseTeacher(dataContext.getUser().getTrueName());
+        course.setCourseTeacher(courseTeacher.getText());
         course.setCourseClass(courseClass.getText());
     }
 

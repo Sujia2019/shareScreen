@@ -26,6 +26,7 @@ public class StudentMainFrame extends JFrame {
     public StudentMainFrame(DataContext dataContext) {
         this.dataContext = dataContext;
         initComponents();
+        this.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
     }
 
     private void showMyInfo(MouseEvent e) {

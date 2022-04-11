@@ -21,7 +21,8 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "drawPanel"
-				"text": "绘画板"
+				"text": "共享画板"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "drawPanelMouseClicked", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

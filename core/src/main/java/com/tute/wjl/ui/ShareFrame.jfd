@@ -8,7 +8,7 @@ new FormModel {
 			"$verticalGroup": "par l {seq l {space :::p, par l {comp screen::::704:x, seq {comp chatPanel:::::x, space :::p, comp input:::p::p, space :::p, comp controller:::::x}}, space :::p}}"
 		} ) {
 			name: "system"
-			"title": "在线教学系统"
+			"title": "在线教学系统 - "
 			"background": new java.awt.Color( 255, 255, 255, 255 )
 			"visible": true
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {

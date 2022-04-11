@@ -167,7 +167,7 @@ public class ShareFrame extends JFrame {
 
         //======== system ========
         {
-            system.setTitle("\u5728\u7ebf\u6559\u5b66\u7cfb\u7edf");
+            system.setTitle("\u5728\u7ebf\u6559\u5b66\u7cfb\u7edf - ");
             system.setBackground(Color.white);
             system.setVisible(true);
             Container systemContentPane = system.getContentPane();
@@ -176,13 +176,12 @@ public class ShareFrame extends JFrame {
             {
                 chatPanel.setBackground(Color.white);
                 chatPanel.setForeground(new Color(102, 102, 102));
-                chatPanel.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax
-                .swing.border.EmptyBorder(0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing
-                .border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java.awt.
-                Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt.Color.red
-                ),chatPanel. getBorder()));chatPanel. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override
-                public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062ord\u0065r".equals(e.getPropertyName(
-                )))throw new RuntimeException();}});
+                chatPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
+                ( 0, 0, 0, 0) , "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border
+                . TitledBorder. BOTTOM, new java .awt .Font ("D\u0069al\u006fg" ,java .awt .Font .BOLD ,12 ), java. awt
+                . Color. red) ,chatPanel. getBorder( )) ); chatPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
+                propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062or\u0064er" .equals (e .getPropertyName () )) throw new RuntimeException( )
+                ; }} );
 
                 //======== userNames ========
                 {
@@ -447,6 +446,4 @@ public class ShareFrame extends JFrame {
     private JLabel screen;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    public static void main(String[] args) throws Exception {
-    }
 }

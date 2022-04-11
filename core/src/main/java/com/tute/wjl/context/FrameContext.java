@@ -1,5 +1,6 @@
 package com.tute.wjl.context;
 
+import com.tute.wjl.ui.DrawPanel;
 import com.tute.wjl.ui.ErrorTips;
 import lombok.Data;
 
@@ -24,4 +25,5 @@ public class FrameContext {
     private JList<String> resList;
     private JList<String> resList2;
     private JList<String> userList;
+    private DrawPanel drawPanel;
 }
