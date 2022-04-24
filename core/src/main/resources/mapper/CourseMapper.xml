@@ -34,6 +34,12 @@
         delete from education.course where id=#{id}
     </delete>
 
+    <update id="updateTeacherName" parameterType="com.tute.wjl.entity.UpdateDTO">
+        update education.course
+        set course_teacher=#{afterName}
+        where course_teacher=#{beforeName}
+    </update>
+
     <resultMap type="com.tute.wjl.entity.Course" id="CourseResult">
         <id property="id" column="id"/>
         <result property="courseName" column="course_name"/>

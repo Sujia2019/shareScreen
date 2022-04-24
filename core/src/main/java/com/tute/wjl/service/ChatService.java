@@ -1,13 +1,18 @@
 package com.tute.wjl.service;
 
 import com.tute.wjl.entity.Message;
+import com.tute.wjl.entity.StuCourseLog;
 import com.tute.wjl.net.NettyServer;
+import com.tute.wjl.utils.Constants;
+import com.tute.wjl.utils.MybatisConf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;
+import org.apache.ibatis.session.SqlSession;
 
 public class ChatService {
     private static ChatService instance;
+    private SqlSession session = MybatisConf.getSqlSession();
     // 双检锁单例模型
     public static ChatService getInstance() {
         if(instance==null) {//先判断是否为null 后上锁进行初始化
@@ -34,6 +39,27 @@ public class ChatService {
         String groupId = sm.getToId();
         ChannelGroup cg = GroupService.groupMap.get(groupId);
         if(cg!=null){
+            // TODO 保存签到记录
+            int logId = GroupService.courseLogMap.get(sm.getToId());
+            if(sm.getMessageType().equals(Constants.ALL)){
+                String content = (String)sm.getContent();
+                if(content.contains("到")){
+                    StuCourseLog stuCourseLog = new StuCourseLog();
+                    stuCourseLog.setLogId(logId);
+                    stuCourseLog.setStuAccount(sm.getFromId());
+                    // 如果没有记录
+                    if(null!=session.selectOne("com.tute.wjl.mapper.StuCourseLogMapper.getByStu",stuCourseLog)){
+                        stuCourseLog.setContent(content);
+                        String courseName = sm.getToId().split("-")[0];
+                        String courseClass = sm.getToId().split("-")[1];
+                        stuCourseLog.setCourseName(courseName);
+                        stuCourseLog.setCourseClass(courseClass);
+                        // 插入一条签到记录
+                        session.insert("com.tute.wjl.mapper.StuCourseLogMapper.insert",stuCourseLog);
+                        session.commit();
+                    }
+                }
+            }
             cg.writeAndFlush(sm);
         }
     }

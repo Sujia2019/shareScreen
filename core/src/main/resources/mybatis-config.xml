@@ -43,6 +43,7 @@
     <mappers>
         <mapper resource="mapper/CourseMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/CourseLogMapper.xml"/>
     </mappers>
 
 </configuration>

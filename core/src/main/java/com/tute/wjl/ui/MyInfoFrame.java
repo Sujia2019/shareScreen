@@ -38,6 +38,9 @@ public class MyInfoFrame extends JFrame {
         content.setText(thisUser.getContent());
         pwd1.setText(thisUser.getUserPwd());
         pwd2.setText(thisUser.getUserPwd());
+        if(!dataContext.isTeacher()){
+            isTeacherLabel.setText("学生");
+        }
     }
 
     private void confirmMouseClicked(MouseEvent e) {

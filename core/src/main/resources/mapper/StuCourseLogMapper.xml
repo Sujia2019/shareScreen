@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tute.wjl.mapper.CourseLogMapper">
+    <select id="getByStu" parameterType="com.tute.wjl.entity.StuCourseLog" resultMap="StuCourseLogResult">
+        select * from education.stu_course_log where stu_account=#{stuAccount} and log_id=#{logId}
+    </select>
+
+    <select id="getByCourse" parameterType="String" resultMap="StuCourseLogResult">
+        select * from education.stu_course_log
+        where course_name=#{courseName}
+    </select>
+
+    <select id="getByLogName" parameterType="String" resultMap="StuCourseLogResult">
+        select * from education.stu_course_log
+        where log_id=(select id from education.course_log where log_name=#{logName})
+    </select>
+
+    <insert id="insert" parameterType="com.tute.wjl.entity.StuCourseLog">
+        insert into education.stu_course_log(id, course_name,course_class, log_id, stu_account,content)
+        values (null,#{courseName},#{courseClass},#{logId},#{stuAccount},#{content})
+    </insert>
+
+    <select id="getStuCourseLogInfo" parameterType="Integer">
+        select a.id,a.stu_account,a.content,a.create_time,b.true_name
+        from education.stu_course_log a,education.user b
+        where log_id=#{logId} and a.stu_account=b.user_account
+    </select>
+
+
+    <resultMap type="com.tute.wjl.entity.StuCourseLog" id="StuCourseLogResult">
+        <id property="id" column="id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseClass" column="course_class"/>
+        <result property="logId" column="log_id"/>
+        <result property="stuAccount" column="stu_account"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap type="com.tute.wjl.entity.StuCourseLogInfo" id="StuCourseLogInfoResult">
+        <id property="id" column="id"/>
+        <result property="stuAccount" column="stu_account"/>
+        <result property="stuName" column="true_name"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+</mapper>

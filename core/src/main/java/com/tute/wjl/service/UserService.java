@@ -1,6 +1,7 @@
 package com.tute.wjl.service;
 
 import com.tute.wjl.entity.Message;
+import com.tute.wjl.entity.UpdateDTO;
 import com.tute.wjl.entity.User;
 import com.tute.wjl.utils.Constants;
 import com.tute.wjl.utils.MybatisConf;
@@ -74,6 +75,11 @@ public class UserService {
 
     public void updateUser(Message message,ChannelHandlerContext ctx){
         User user = (User) message.getContent();
+        String beforeName = session.selectOne("com.tute.wjl.mapper.UserMapper.getByAccount",user.getUserAccount());
+        UpdateDTO update = new UpdateDTO();
+        update.setAfterName(user.getTrueName());
+        update.setBeforeName(beforeName);
+        session.update("com.tute.wjl.mapper.CourseMapper.updateTeacherName",update);
         if(session.update("com.tute.wjl.mapper.UserMapper.update",user)>0){
             session.commit();
             message.setFromId("SERVER");

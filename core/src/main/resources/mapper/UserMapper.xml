@@ -23,6 +23,10 @@
         select count(*) from education.user where user.user_account=#{userAccount}
     </select>
 
+    <select id="getByAccount" parameterType="String" resultType="String">
+        select user.true_name from education.user where user.user_account=#{userAccount}
+    </select>
+
     <resultMap type="com.tute.wjl.entity.User" id="UserResult">
         <id property="id" column="id"/>
         <result property="userAccount" column="user_account"/>

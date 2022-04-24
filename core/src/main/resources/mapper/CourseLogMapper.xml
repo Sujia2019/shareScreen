@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tute.wjl.mapper.CourseLogMapper">
+    <select id="getByClass" parameterType="String" resultMap="CourseLogResult">
+        select * from education.course_log where course_class=#{courseClass}
+    </select>
+
+    <select id="getByTeacher" parameterType="String" resultMap="CourseLogResult">
+        select * from education.course_log where teacher_name=#{teacherName}
+    </select>
+
+    <select id="getCourseId" parameterType="String" resultMap="CourseLogResult">
+        select course from education.course_log where teacher_name=#{teacherName}
+    </select>
+
+    <select id="getByName" parameterType="String" resultMap="CourseLogResult">
+        select * from education.course_log where log_name like concat('%',#{courseName},'%')
+    </select>
+
+    <insert id="insert" parameterType="com.tute.wjl.entity.CourseLog">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            select  last_insert_id()
+        </selectKey>
+        insert into education.course_log(id, log_name, course_name, course_class,
+                                     create_time, teacher_account, teacher_name)
+        values (null,#{logName},#{courseName},#{courseClass},#{createTime},#{teacherAccount},#{teacherName})
+    </insert>
+
+    <update id="updateNumber" parameterType="com.tute.wjl.entity.CourseLog">
+        update education.course_log
+        set attend_number=#{attendNumber}
+        where id=#{id} and is_finished=false
+    </update>
+
+    <update id="updateStatus" parameterType="String">
+        update education.course_log
+        set is_finished=true and end_time=now()
+        where course_class=#{courseClass} and is_finished=false
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from education.course_log where id=#{id}
+    </delete>
+
+    <!-- 查询是否有未结束的课程 -->
+    <select id="getClassStatus" parameterType="String" resultMap="CourseLogResult">
+        select * from education.course_log where course_class=#{courseClass} and is_finished=false;
+    </select>
+
+    <resultMap type="com.tute.wjl.entity.CourseLog" id="CourseLogResult">
+        <id property="id" column="id"/>
+        <result property="logName" column="log_name"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseClass" column="course_class"/>
+        <result property="createTime" column="create_time"/>
+        <result property="teacherAccount" column="teacher_account"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="attendNumber" column="attend_number"/>
+    </resultMap>
+</mapper>
