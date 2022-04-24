@@ -44,6 +44,7 @@
         <mapper resource="mapper/CourseMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/CourseLogMapper.xml"/>
+        <mapper resource="mapper/StuCourseLogMapper.xml"/>
     </mappers>
 
 </configuration>
