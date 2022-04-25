@@ -48,7 +48,7 @@ public class ChatService {
                     stuCourseLog.setLogId(logId);
                     stuCourseLog.setStuAccount(sm.getFromId());
                     // 如果没有记录
-                    if(null!=session.selectOne("com.tute.wjl.mapper.StuCourseLogMapper.getByStu",stuCourseLog)){
+                    if(null==session.selectOne("com.tute.wjl.mapper.StuCourseLogMapper.getByStu",stuCourseLog)){
                         stuCourseLog.setContent(content);
                         String courseName = sm.getToId().split("-")[0];
                         String courseClass = sm.getToId().split("-")[1];

@@ -61,6 +61,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
                 // 开始上课
                 case Constants.START:
                     groupService.createGroup(message,ctx);
+                    groupService.addGroup(message,ctx);
                     break;
                 // 结束课程
                 case Constants.END:
@@ -159,7 +160,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             default:
                 break;
         }
-        System.out.println(message);
         ctx.writeAndFlush(message);
 
     }

@@ -52,13 +52,13 @@ public class GroupService {
 
     // 创建分组
     public void createGroup(Message message,ChannelHandlerContext ctx){
+        String toId = message.getToId();
         ChannelGroup cg = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        System.out.println("创建分组：分组ID "+message.getToId());
-        String courseName = message.getToId().split("-")[0];
-        String courseClass = message.getToId().split("-")[1];
+        String courseName = toId.split("-")[0];
+        String courseClass = toId.split("-")[1];
         // 创建开课记录
         // 如果暂时没有未结束课程，insert一条开课记录
-        if(session.selectOne("com.tute.wjl.mapper.CourseLogMapper.getCourseStatus",courseClass)!=null){
+        if(session.selectOne("com.tute.wjl.mapper.CourseLogMapper.getClassStatus",courseClass)==null){
             CourseLog courseLog = new CourseLog();
             courseLog.setTeacherAccount(message.getFromId());
             courseLog.setTeacherName(message.getFromName());
@@ -70,18 +70,19 @@ public class GroupService {
             session.insert("com.tute.wjl.mapper.CourseLogMapper.insert",courseLog);
             session.commit();
             // 保存【组-记录id】
-            courseLogMap.put(message.getToId(),courseLog.getId());
-            groupMap.put(message.getToId(),cg);
+            System.out.println("创建分组：分组ID "+toId);
+            courseLogMap.put(toId,courseLog.getId());
+            groupMap.put(toId,cg);
             // ...记得把自己加入分组，，，
             message.setMessageType(Constants.CREATE_SUCCESS);
             ctx.writeAndFlush(message);
-            groupWithUserNames.put(message.getToId(),new ArrayList<>());
-            addGroup(message,ctx);
+            groupWithUserNames.put(toId,new ArrayList<>());
         }else{
             message.setMessageType(Constants.ERROR);
             message.setContent("【"+courseClass+"】这个班正在上【"+courseClass+"】中。。。");
             ctx.writeAndFlush(message);
         }
+//        addGroup(message,ctx);
     }
 
     // 销毁分组
@@ -97,11 +98,17 @@ public class GroupService {
         groupWithUserNames.remove(toId);
         // TODO 生成报告表格xsl
         int courseLogId = courseLogMap.get(toId);
-        List<StuCourseLogInfo> stuCourseLogInfos = session.selectList("com.tute.wjl.mapper.CourseLogMapper.getStuCourseLogInfo",courseLogId);
+        List<StuCourseLogInfo> stuCourseLogInfos = session.selectList("com.tute.wjl.mapper.StuCourseLogMapper.getStuCourseLogInfo",courseLogId);
         // 生成签到记录并上传
-        ExcelUtil.export(stuCourseLogInfos,toId+"-"+ DateUtil.formatDateTime(new Date()));
+        String thisDate = DateUtil.formatDateTime(new Date());
+        String fileName = toId+"-"+thisDate;
+        fileName = ExcelUtil.export(stuCourseLogInfos,fileName);
+        CourseLog log = new CourseLog();
+        log.setId(courseLogId);
+        log.setLogUrl(fileName);
+        log.setEndTime(thisDate);
         // 结束开课记录
-        session.update("com.tute.wjl.mapper.CourseLogMapper.updateStatus",toId.split("-")[1]);
+        session.update("com.tute.wjl.mapper.CourseLogMapper.updateStatus",log);
         session.commit();
         courseLogMap.remove(toId);
     }

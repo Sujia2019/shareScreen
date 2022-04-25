@@ -12,5 +12,7 @@ public class CourseLog {
     private String teacherAccount;
     private String teacherName;
     private int attendNumber;
+    private boolean isFinished;
     private String endTime; // 签到记录生成时间
+    private String logUrl;
 }

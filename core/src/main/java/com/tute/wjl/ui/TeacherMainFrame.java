@@ -55,7 +55,7 @@ public class TeacherMainFrame extends JFrame {
 
     private void myCourseMouseClicked(MouseEvent e) {
         Message message = dataContext.initMessage(Constants.COURSE);
-        message.setContent(dataContext.getUser().getUserAccount());
+        message.setContent(dataContext.getUser().getTrueName());
         message.setToId(Constants.COURSE_TEACHER);
         ClientApplication.send(message);
     }

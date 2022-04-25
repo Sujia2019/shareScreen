@@ -29,7 +29,7 @@ public class CourseService {
 
     public void getCourseByClass(Message message){
         message.setToId(Constants.COURSE_CLASS_SUCCESS);
-        List<Course> res = session.selectList("getByClass",message.getContent());
+        List<Course> res = session.selectList("com.tute.wjl.mapper.CourseMapper.getByClass",message.getContent());
         message.setContent(res);
 
     }
@@ -37,14 +37,14 @@ public class CourseService {
     public void getCourseByTeacher(Message message){
         message.setToId(Constants.COURSE_TEACHER_SUCCESS);
         System.out.println(message);
-        List<Course> res = session.selectList("getByTeacher",message.getContent());
+        List<Course> res = session.selectList("com.tute.wjl.mapper.CourseMapper.getByTeacher",message.getContent());
         message.setContent(res);
     }
 
     // 模糊查询
     public void getCourseByName(Message message){
         message.setToId(Constants.COURSE_SEARCH_SUCCESS);
-        List<Course> res = session.selectList("getByName",message.getContent());
+        List<Course> res = session.selectList("com.tute.wjl.mapper.CourseMapper.getByName",message.getContent());
         message.setContent(res);
     }
 

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.tute.wjl.mapper.CourseLogMapper">
+<mapper namespace="com.tute.wjl.mapper.StuCourseLogMapper">
     <select id="getByStu" parameterType="com.tute.wjl.entity.StuCourseLog" resultMap="StuCourseLogResult">
         select * from education.stu_course_log where stu_account=#{stuAccount} and log_id=#{logId}
     </select>
@@ -23,7 +23,7 @@
         values (null,#{courseName},#{courseClass},#{logId},#{stuAccount},#{content})
     </insert>
 
-    <select id="getStuCourseLogInfo" parameterType="Integer">
+    <select id="getStuCourseLogInfo" parameterType="Integer" resultMap="StuCourseLogInfoResult">
         select a.id,a.stu_account,a.content,a.create_time,b.true_name
         from education.stu_course_log a,education.user b
         where log_id=#{logId} and a.stu_account=b.user_account
@@ -47,4 +47,6 @@
         <result property="content" column="content"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
+
+
 </mapper>

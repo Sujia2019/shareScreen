@@ -37,6 +37,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) {
+        System.out.println(message);
         clientHandlerPool.execute(()->{
             switch (message.getMessageType()){
                 case Constants.VOICE:
@@ -105,7 +106,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
                     errorMsg(message);
                     break;
                 default:
-                    System.out.println(message);
                     LOGGER.info("message type is not defined");
 
             }
@@ -168,15 +168,16 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Message> {
         context.getShareFrame().setVisible(true);
         context.getShareFrame().setTitle("在线教学系统 - 【"+dataContext.getUser().getUserName()+"】");
         dataContext.setShareGroupName(message.getToId());
-        VoiceService.getInstance().startPlay();
+//        VoiceService.getInstance().startPlay();
     }
 
     // 进入课堂
     private void joinGroup(Message message){
         setUserList(message);
+        context.getShareFrame().setVisible(true);
         context.getShareFrame().setTitle("在线教学系统 - 【"+dataContext.getUser().getUserName()+"】");
         dataContext.setShareGroupName(message.getToId());
-        VoiceService.getInstance().startPlay();
+//        VoiceService.getInstance().startPlay();
     }
     private void setUserList(Message message){
         List res = (List) message.getContent();

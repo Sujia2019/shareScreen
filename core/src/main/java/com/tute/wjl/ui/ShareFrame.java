@@ -42,7 +42,7 @@ public class ShareFrame extends JFrame {
             boardController.setVisible(true);
             system.setVisible(false);
             new Thread(new ShareScreen()).start();
-            new Thread(new VoiceCapture()).start();
+//            new Thread(new VoiceCapture()).start();
         }
     }
 

@@ -80,6 +80,7 @@ public class UserService {
         update.setAfterName(user.getTrueName());
         update.setBeforeName(beforeName);
         session.update("com.tute.wjl.mapper.CourseMapper.updateTeacherName",update);
+        session.commit();
         if(session.update("com.tute.wjl.mapper.UserMapper.update",user)>0){
             session.commit();
             message.setFromId("SERVER");

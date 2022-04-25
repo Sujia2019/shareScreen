@@ -12,10 +12,6 @@
         select * from education.course_log where teacher_name=#{teacherName}
     </select>
 
-    <select id="getCourseId" parameterType="String" resultMap="CourseLogResult">
-        select course from education.course_log where teacher_name=#{teacherName}
-    </select>
-
     <select id="getByName" parameterType="String" resultMap="CourseLogResult">
         select * from education.course_log where log_name like concat('%',#{courseName},'%')
     </select>
@@ -35,10 +31,10 @@
         where id=#{id} and is_finished=false
     </update>
 
-    <update id="updateStatus" parameterType="String">
+    <update id="updateStatus" parameterType="com.tute.wjl.entity.CourseLog">
         update education.course_log
-        set is_finished=true and end_time=now()
-        where course_class=#{courseClass} and is_finished=false
+        set is_finished=true,end_time=#{endTime},log_url=#{logUrl}
+        where id=#{id} and is_finished=false
     </update>
 
     <delete id="delete" parameterType="Integer">
@@ -59,5 +55,8 @@
         <result property="teacherAccount" column="teacher_account"/>
         <result property="teacherName" column="teacher_name"/>
         <result property="attendNumber" column="attend_number"/>
+        <result property="isFinished" column="is_finished"/>
+        <result property="endTime" column="end_time"/>
+        <result property="logUrl" column="log_url"/>
     </resultMap>
 </mapper>

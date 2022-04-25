@@ -5,7 +5,7 @@ import com.tute.wjl.entity.StuCourseLogInfo;
 
 import java.util.List;
 
-public interface StuCourseMapper {
+public interface StuCourseLogMapper {
     // 根据学生账号和课程记录id查看学生签到记录
     public StuCourseLog getByStu(StuCourseLog stuCourseLog);
 
